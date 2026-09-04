@@ -74,7 +74,7 @@ function Home() {
           aria-hidden="true"
         />
         <div className="mx-auto w-full max-w-7xl px-4 pt-28 pb-24 sm:px-6 lg:px-8">
-          <Reveal className="max-w-3xl text-charcoal-foreground">
+          <div className="max-w-3xl text-charcoal-foreground">
             <span className="eyebrow rule-accent">Build Pukka.</span>
             <h1 className="font-display mt-5 text-4xl leading-[0.98] font-extrabold text-balance uppercase sm:text-6xl lg:text-7xl">
               Build Better. <span className="text-primary">Source Smarter.</span>
@@ -94,7 +94,7 @@ function Home() {
             <p className="font-display mt-10 text-xs font-bold tracking-[0.18em] text-charcoal-foreground/60 uppercase">
               Building Materials • Procurement • Fit-Out • HVAC
             </p>
-          </Reveal>
+          </div>
         </div>
         <span
           className="absolute bottom-6 left-1/2 -translate-x-1/2 text-charcoal-foreground/60"
