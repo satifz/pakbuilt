@@ -16,13 +16,25 @@ const buttonVariants = cva(
         secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        /** Primary brand CTA — orange, lifts on hover. */
+        cta: "font-display bg-primary text-primary-foreground font-bold tracking-wide uppercase shadow-glow transition-all hover:-translate-y-0.5 hover:bg-primary/92",
+        /** Secondary CTA on dark/photographic backgrounds. */
+        onDark:
+          "font-display border border-charcoal-foreground/30 bg-charcoal-foreground/5 text-charcoal-foreground font-bold tracking-wide uppercase backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:border-primary hover:bg-charcoal-foreground/10",
+        /** Secondary CTA on light backgrounds. */
+        onLight:
+          "font-display border border-foreground/15 bg-card text-foreground font-bold tracking-wide uppercase shadow-card transition-all hover:-translate-y-0.5 hover:border-primary hover:text-primary",
+        whatsapp:
+          "font-display bg-whatsapp text-whatsapp-foreground font-bold tracking-wide uppercase shadow-lift transition-all hover:-translate-y-0.5 hover:bg-whatsapp/90",
       },
       size: {
         default: "h-9 px-4 py-2",
         sm: "h-8 rounded-md px-3 text-xs",
-        lg: "h-10 rounded-md px-8",
+        lg: "h-11 rounded-md px-7 text-sm",
+        xl: "h-13 rounded-md px-9 text-base",
         icon: "h-9 w-9",
       },
+
     },
     defaultVariants: {
       variant: "default",
