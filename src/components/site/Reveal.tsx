@@ -15,7 +15,6 @@ export function Reveal({ children, className, delay = 0, as: Tag = "div" }: Reve
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    console.log("[reveal] effect", !!ref.current);
     const el = ref.current;
     if (!el || typeof IntersectionObserver === "undefined") {
       setVisible(true);
