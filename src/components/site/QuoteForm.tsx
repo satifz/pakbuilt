@@ -211,12 +211,14 @@ export function QuoteForm({ defaultProduct = "" }: { defaultProduct?: string }) 
 }
 
 function Field({
+  id,
   label,
   required,
   error,
   className,
   children,
 }: {
+  id: string;
   label: string;
   required?: boolean;
   error?: string | undefined;
@@ -225,12 +227,17 @@ function Field({
 }) {
   return (
     <div className={className}>
-      <Label className="mb-2 block text-xs font-semibold tracking-wide uppercase">
+      <Label htmlFor={id} className="mb-2 block text-xs font-semibold tracking-wide uppercase">
         {label}
         {required ? <span className="text-primary"> *</span> : null}
       </Label>
       {children}
-      {error ? <p className="mt-1.5 text-xs text-destructive">{error}</p> : null}
+      {error ? (
+        <p id={`${id}-error`} className="mt-1.5 text-xs text-destructive">
+          {error}
+        </p>
+      ) : null}
     </div>
   );
 }
+
