@@ -103,18 +103,25 @@ export function QuoteForm({ defaultProduct = "" }: { defaultProduct?: string }) 
       className="rounded-xl border border-border bg-card p-5 shadow-card sm:p-7"
     >
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Name" required error={errors.name}>
-          <Input value={values.name} onChange={(e) => set("name")(e.target.value)} autoComplete="name" />
-        </Field>
-        <Field label="Company">
+        <Field id="q-name" label="Name" required error={errors.name}>
           <Input
+            id="q-name"
+            value={values.name}
+            onChange={(e) => set("name")(e.target.value)}
+            autoComplete="name"
+          />
+        </Field>
+        <Field id="q-company" label="Company">
+          <Input
+            id="q-company"
             value={values.companyName}
             onChange={(e) => set("companyName")(e.target.value)}
             autoComplete="organization"
           />
         </Field>
-        <Field label="Phone" required error={errors.phone}>
+        <Field id="q-phone" label="Phone" required error={errors.phone}>
           <Input
+            id="q-phone"
             value={values.phone}
             onChange={(e) => set("phone")(e.target.value)}
             inputMode="tel"
@@ -122,16 +129,18 @@ export function QuoteForm({ defaultProduct = "" }: { defaultProduct?: string }) 
             autoComplete="tel"
           />
         </Field>
-        <Field label="Email" required error={errors.email}>
+        <Field id="q-email" label="Email" required error={errors.email}>
           <Input
+            id="q-email"
             value={values.email}
             onChange={(e) => set("email")(e.target.value)}
             type="email"
             autoComplete="email"
           />
         </Field>
-        <Field label="Product / material needed">
+        <Field id="q-product" label="Product / material needed">
           <select
+            id="q-product"
             value={values.product}
             onChange={(e) => set("product")(e.target.value)}
             className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
@@ -145,8 +154,9 @@ export function QuoteForm({ defaultProduct = "" }: { defaultProduct?: string }) 
             <option value="Other">Other / not listed</option>
           </select>
         </Field>
-        <Field label="Project type">
+        <Field id="q-project-type" label="Project type">
           <select
+            id="q-project-type"
             value={values.projectType}
             onChange={(e) => set("projectType")(e.target.value)}
             className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
@@ -159,20 +169,32 @@ export function QuoteForm({ defaultProduct = "" }: { defaultProduct?: string }) 
             ))}
           </select>
         </Field>
-        <Field label="Requirement" required error={errors.requirement} className="sm:col-span-2">
+        <Field
+          id="q-requirement"
+          label="Requirement"
+          required
+          error={errors.requirement}
+          className="sm:col-span-2"
+        >
           <Textarea
+            id="q-requirement"
             rows={3}
             value={values.requirement}
             onChange={(e) => set("requirement")(e.target.value)}
             placeholder="What do you need sourced?"
           />
         </Field>
-        <Field label="Quantity / estimated requirement">
-          <Input value={values.quantity} onChange={(e) => set("quantity")(e.target.value)} />
+        <Field id="q-quantity" label="Quantity / estimated requirement">
+          <Input
+            id="q-quantity"
+            value={values.quantity}
+            onChange={(e) => set("quantity")(e.target.value)}
+          />
         </Field>
-        <Field label="Upload BOQ / file">
+        <Field id="q-file" label="Upload BOQ / file">
           <input
             ref={fileRef}
+            id="q-file"
             type="file"
             accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.jpg,.jpeg,.png"
             className="sr-only"
@@ -186,14 +208,16 @@ export function QuoteForm({ defaultProduct = "" }: { defaultProduct?: string }) 
             {fileName ?? "PDF, Excel, Word or image"}
           </p>
         </Field>
-        <Field label="Message" className="sm:col-span-2">
+        <Field id="q-message" label="Message" className="sm:col-span-2">
           <Textarea
+            id="q-message"
             rows={4}
             value={values.message}
             onChange={(e) => set("message")(e.target.value)}
             placeholder="Timelines, delivery location, specifications…"
           />
         </Field>
+
       </div>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
