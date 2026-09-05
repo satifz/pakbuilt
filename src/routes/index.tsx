@@ -126,7 +126,7 @@ function Home() {
             ))}
 
             {/* Capability block */}
-            <div className="tile flex flex-col justify-between p-8 md:col-span-4">
+            <div className="tile flex flex-col justify-between p-8 md:col-span-6">
               <div className="flex items-start justify-between">
                 <span className="block h-12 w-1 bg-primary" aria-hidden="true" />
                 <span className="text-[0.6rem] tracking-widest opacity-40">24.9° N, 67.0° E</span>
@@ -142,7 +142,7 @@ function Home() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 md:col-span-4">
+            <div className="grid grid-cols-2 gap-3 md:col-span-6">
               {[
                 { n: "03", label: "Fit-Out", to: "/solutions" },
                 { n: "04", label: "HVAC", to: "/solutions" },
