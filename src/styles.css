@@ -251,3 +251,27 @@
     transform: none;
   }
 }
+
+/* Precision-block tile used across the bento layouts */
+@utility tile {
+  border: 1px solid oklch(1 0 0 / 8%);
+  background: var(--color-charcoal-muted);
+  transition:
+    background-color 0.4s ease,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@utility tile-light {
+  border: 1px solid var(--color-border);
+  background: var(--color-card);
+  transition:
+    border-color 0.3s ease,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s ease;
+}
+
+@utility tile-hover {
+  &:hover {
+    transform: translateY(-3px);
+  }
+}
