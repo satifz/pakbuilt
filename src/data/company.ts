@@ -23,6 +23,9 @@ export const navLinks = [
   { label: "Products", to: "/products" },
   { label: "Solutions", to: "/solutions" },
   { label: "Industries", to: "/industries" },
-  { label: "Why PakBuilt", to: "/why-pakbuilt" },
+  { label: "Projects", to: "/projects" },
   { label: "Contact", to: "/contact" },
 ] as const;
+
+/** Secondary links surfaced in the footer only. */
+export const footerLinks = [{ label: "Why PakBuilt", to: "/why-pakbuilt" }] as const;
