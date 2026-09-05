@@ -219,16 +219,16 @@ function Home() {
         </div>
       </section>
 
-      <SolutionsGrid />
-      <CategoryShowcase limit={6} />
+      <SolutionCards />
       <BoqBanner />
       <ProcessSection />
       <BenefitsSection />
       <FounderSection />
-      <IndustriesSection />
+      <IndustryCards />
       <FeaturedProducts />
       <BrandMessage />
       <FaqSection />
+
     </>
   );
 }
