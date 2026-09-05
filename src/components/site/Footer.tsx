@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone } from "lucide-react";
 import { Logo } from "@/components/site/Logo";
-import { company, navLinks } from "@/data/company";
+import { company, footerLinks, navLinks } from "@/data/company";
 
 const services = [
   "Building Materials",
@@ -46,19 +46,18 @@ export function Footer() {
                 Explore
               </h3>
               <ul className="mt-5 space-y-2.5 text-sm">
-                {navLinks
-                  .filter((l) => l.label !== "Why PakBuilt")
-                  .map((link) => (
-                    <li key={link.to}>
-                      <Link
-                        to={link.to}
-                        className="text-charcoal-foreground/70 transition-colors hover:text-primary"
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
+                {[...navLinks, ...footerLinks].map((link) => (
+                  <li key={link.to}>
+                    <Link
+                      to={link.to}
+                      className="text-charcoal-foreground/70 transition-colors hover:text-primary"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
+
             </nav>
 
             <div>
