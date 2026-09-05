@@ -8,7 +8,6 @@ import {
   BrandMessage,
   FaqSection,
   ProcessSection,
-  ProcessSection,
   ValueStrip,
 } from "@/components/sections/Blocks";
 import { BuildingSelector } from "@/components/sections/BuildingSelector";
