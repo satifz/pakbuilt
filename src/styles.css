@@ -50,45 +50,46 @@
   --color-whatsapp: var(--whatsapp);
   --color-whatsapp-foreground: var(--charcoal-foreground);
 
-  --shadow-card: 0 1px 2px oklch(0.2 0.02 60 / 6%), 0 12px 32px -18px oklch(0.2 0.02 60 / 22%);
-  --shadow-lift: 0 18px 48px -22px oklch(0.2 0.02 60 / 34%);
-  --shadow-glow: 0 18px 44px -18px oklch(0.66 0.2 44 / 45%);
+  --shadow-card: 0 1px 2px oklch(0.2582 0.0787 263 / 8%), 0 12px 32px -18px oklch(0.2582 0.0787 263 / 26%);
+  --shadow-lift: 0 18px 48px -22px oklch(0.2582 0.0787 263 / 38%);
+  --shadow-glow: 0 18px 44px -18px oklch(0.5684 0.2129 26 / 40%);
 }
 
 :root {
-  --radius: 0.5rem;
+  --radius: 0rem;
 
-  --background: oklch(0.99 0.004 80);
-  --foreground: oklch(0.21 0.012 60);
+  --background: oklch(0.9819 0.0029 264.5);
+  --foreground: oklch(0.2582 0.0787 263);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.21 0.012 60);
+  --card-foreground: oklch(0.2582 0.0787 263);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.21 0.012 60);
+  --popover-foreground: oklch(0.2582 0.0787 263);
 
-  --primary: oklch(0.665 0.201 42.5);
-  --primary-foreground: oklch(0.99 0.004 80);
+  --primary: oklch(0.5684 0.2129 26);
+  --primary-foreground: oklch(1 0 0);
 
-  --secondary: oklch(0.955 0.008 80);
-  --secondary-foreground: oklch(0.24 0.012 60);
-  --muted: oklch(0.958 0.006 80);
-  --muted-foreground: oklch(0.5 0.012 60);
-  --accent: oklch(0.955 0.03 60);
-  --accent-foreground: oklch(0.28 0.05 45);
+  --secondary: oklch(0.955 0.006 264);
+  --secondary-foreground: oklch(0.2582 0.0787 263);
+  --muted: oklch(0.958 0.005 264);
+  --muted-foreground: oklch(0.5 0.03 263);
+  --accent: oklch(0.945 0.02 264);
+  --accent-foreground: oklch(0.3053 0.0947 262);
 
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
 
-  --border: oklch(0.9 0.008 70);
-  --input: oklch(0.9 0.008 70);
-  --ring: oklch(0.665 0.201 42.5);
+  --border: oklch(0.895 0.012 264);
+  --input: oklch(0.895 0.012 264);
+  --ring: oklch(0.5684 0.2129 26);
 
-  --charcoal: oklch(0.205 0.008 60);
-  --charcoal-foreground: oklch(0.975 0.004 80);
-  --charcoal-muted: oklch(0.27 0.01 60);
-  --steel: oklch(0.62 0.02 240);
-  --sand: oklch(0.955 0.014 80);
+  --charcoal: oklch(0.2582 0.0787 263);
+  --charcoal-foreground: oklch(0.985 0.003 264);
+  --charcoal-muted: oklch(0.3053 0.0947 262);
+  --steel: oklch(0.3554 0.111 262.5);
+  --sand: oklch(0.96 0.008 264);
   --whatsapp: oklch(0.68 0.17 148);
 }
+
 
 .dark {
   --background: oklch(0.19 0.008 60);
