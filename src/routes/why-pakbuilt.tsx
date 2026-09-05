@@ -14,9 +14,9 @@ export const Route = createFileRoute("/why-pakbuilt")({
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "/why-pakbuilt" },
+      { property: "og:url", content: "https://pakbuilt-build-pukka.lovable.app/why-pakbuilt" },
     ],
-    links: [{ rel: "canonical", href: "/why-pakbuilt" }],
+    links: [{ rel: "canonical", href: "https://pakbuilt-build-pukka.lovable.app/why-pakbuilt" }],
   }),
   component: WhyPage,
 });

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { BrandMessage, IndustriesSection } from "@/components/sections/Blocks";
+import { BrandMessage } from "@/components/sections/Blocks";
+import { IndustryCards } from "@/components/sections/IndustryCards";
 import { PageHero } from "@/components/site/PageHero";
 
 const title = "Industries We Supply | Residential to Industrial — PakBuilt";
@@ -14,9 +15,9 @@ export const Route = createFileRoute("/industries")({
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "/industries" },
+      { property: "og:url", content: "https://pakbuilt-build-pukka.lovable.app/industries" },
     ],
-    links: [{ rel: "canonical", href: "/industries" }],
+    links: [{ rel: "canonical", href: "https://pakbuilt-build-pukka.lovable.app/industries" }],
   }),
   component: IndustriesPage,
 });
@@ -29,7 +30,7 @@ function IndustriesPage() {
         title="Built for how you work."
         subtitle="The same structured sourcing process, scaled from a single home renovation to an ongoing facilities contract."
       />
-      <IndustriesSection />
+      <IndustryCards />
       <BrandMessage />
     </>
   );

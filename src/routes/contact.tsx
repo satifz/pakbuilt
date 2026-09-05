@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ContactDetails, FaqSection } from "@/components/sections/Blocks";
 import { PageHero } from "@/components/site/PageHero";
-import { QuoteForm } from "@/components/site/QuoteForm";
+import { QuoteWizard } from "@/components/site/QuoteWizard";
 import { Reveal } from "@/components/site/Reveal";
 import { company } from "@/data/company";
 
@@ -17,9 +17,9 @@ export const Route = createFileRoute("/contact")({
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "/contact" },
+      { property: "og:url", content: "https://pakbuilt-build-pukka.lovable.app/contact" },
     ],
-    links: [{ rel: "canonical", href: "/contact" }],
+    links: [{ rel: "canonical", href: "https://pakbuilt-build-pukka.lovable.app/contact" }],
   }),
   component: ContactPage,
 });
@@ -36,7 +36,7 @@ function ContactPage() {
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
         <div className="grid gap-10 lg:grid-cols-[1fr_0.7fr]">
           <Reveal>
-            <QuoteForm />
+            <QuoteWizard />
           </Reveal>
           <Reveal delay={100}>
             <h2 className="font-display text-xl font-bold">Reach us directly</h2>
