@@ -63,46 +63,119 @@ export const Route = createFileRoute("/")({
 function Home() {
   return (
     <>
-      <section className="relative isolate flex min-h-[92svh] items-center overflow-hidden">
-        <img
-          src={heroImage}
-          alt="Construction site with building materials being prepared for a project"
-          className="absolute inset-0 -z-20 size-full object-cover"
-        />
-        <div
-          className="absolute inset-0 -z-10 bg-gradient-to-r from-charcoal via-charcoal/85 to-charcoal/40"
-          aria-hidden="true"
-        />
-        <div className="mx-auto w-full max-w-7xl px-4 pt-28 pb-24 sm:px-6 lg:px-8">
-          <div className="max-w-3xl text-charcoal-foreground">
-            <span className="eyebrow rule-accent">Build Pukka.</span>
-            <h1 className="font-display mt-5 text-4xl leading-[0.98] font-extrabold text-balance uppercase sm:text-6xl lg:text-7xl">
-              Build Better. <span className="text-primary">Source Smarter.</span>
-            </h1>
-            <p className="mt-6 max-w-2xl text-base leading-relaxed text-charcoal-foreground/80 sm:text-lg">
-              Building materials, construction supplies and practical solutions for contractors,
-              builders, businesses and property owners across Pakistan.
-            </p>
-            <div className="mt-9 flex flex-wrap gap-3">
-              <Button asChild variant="cta" size="xl">
-                <Link to="/contact">Request a Quote</Link>
-              </Button>
-              <Button asChild variant="onDark" size="xl">
-                <Link to="/products">Explore Products</Link>
-              </Button>
+      <section className="bg-charcoal text-charcoal-foreground">
+        <div className="mx-auto max-w-7xl px-4 pt-24 pb-14 sm:px-6 lg:px-8 lg:pt-28">
+          <div className="grid gap-3 md:grid-cols-12 lg:h-[620px]">
+            {/* Headline block */}
+            <div className="tile relative flex flex-col justify-end overflow-hidden p-8 md:col-span-8 md:row-span-2 lg:p-12">
+              <img
+                src={heroImage}
+                alt="Construction site with building materials being prepared for a project"
+                className="absolute inset-0 size-full object-cover opacity-30"
+              />
+              <div
+                className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/70 to-charcoal/20"
+                aria-hidden="true"
+              />
+              <div className="relative">
+                <h1 className="font-display text-4xl leading-[0.9] font-bold text-balance sm:text-6xl lg:text-7xl">
+                  Build Better.
+                  <br />
+                  <span className="text-primary">Source Smarter.</span>
+                </h1>
+                <p className="mt-6 max-w-xl text-base leading-relaxed text-charcoal-foreground/75">
+                  Building materials, construction supplies and practical solutions for contractors,
+                  builders, businesses and property owners across Pakistan.
+                </p>
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <Button asChild variant="cta" size="xl">
+                    <Link to="/contact">Request a Quote</Link>
+                  </Button>
+                  <Button asChild variant="onDark" size="xl">
+                    <Link to="/products">Explore Products</Link>
+                  </Button>
+                </div>
+              </div>
             </div>
-            <p className="font-display mt-10 text-xs font-bold tracking-[0.18em] text-charcoal-foreground/60 uppercase">
-              Building Materials • Procurement • Fit-Out • HVAC
-            </p>
+
+            {/* Tagline block */}
+            <div className="flex flex-col justify-between bg-primary p-8 text-primary-foreground md:col-span-4">
+              <span className="font-display text-[0.65rem] font-bold tracking-[0.3em] uppercase opacity-80">
+                Karachi, Pakistan
+              </span>
+              <span className="font-display mt-8 text-4xl leading-none font-bold tracking-tight lg:text-5xl">
+                Build Pukka.
+              </span>
+            </div>
+
+            {/* Service tiles */}
+            {[
+              { n: "01", label: "Building Materials", to: "/products" },
+              { n: "02", label: "Procurement", to: "/solutions" },
+            ].map((s) => (
+              <Link
+                key={s.n}
+                to={s.to}
+                className="tile tile-hover flex flex-col items-center justify-center p-6 text-center hover:bg-primary md:col-span-2"
+              >
+                <span className="font-display text-[0.6rem] font-bold tracking-[0.2em] uppercase opacity-60">
+                  Service {s.n}
+                </span>
+                <span className="font-display mt-2 text-sm leading-tight font-bold">{s.label}</span>
+              </Link>
+            ))}
+
+            {/* Capability block */}
+            <div className="tile flex flex-col justify-between p-8 md:col-span-6">
+              <div className="flex items-start justify-between">
+                <span className="block h-12 w-1 bg-primary" aria-hidden="true" />
+                <span className="text-[0.6rem] tracking-widest opacity-40">24.9° N, 67.0° E</span>
+              </div>
+              <div className="mt-8">
+                <span className="font-display text-[0.65rem] font-bold tracking-[0.2em] text-primary uppercase">
+                  Capability
+                </span>
+                <p className="mt-1 text-sm text-charcoal-foreground/60">
+                  Materials, procurement and building-services sourcing through one point of
+                  contact.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 md:col-span-6">
+              {[
+                { n: "03", label: "Fit-Out", to: "/solutions" },
+                { n: "04", label: "HVAC", to: "/solutions" },
+              ].map((s) => (
+                <Link
+                  key={s.n}
+                  to={s.to}
+                  className="tile tile-hover flex flex-col items-center justify-center p-6 text-center hover:bg-primary"
+                >
+                  <span className="font-display text-[0.6rem] font-bold tracking-[0.2em] uppercase opacity-60">
+                    Service {s.n}
+                  </span>
+                  <span className="font-display mt-2 text-sm leading-tight font-bold">
+                    {s.label}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-charcoal-foreground/10 pt-5 text-[0.65rem] font-bold tracking-[0.2em] text-charcoal-foreground/40 uppercase">
+            <span>Building Materials</span>
+            <span aria-hidden="true">•</span>
+            <span>Procurement</span>
+            <span aria-hidden="true">•</span>
+            <span>Fit-Out</span>
+            <span aria-hidden="true">•</span>
+            <span>HVAC</span>
+            <ChevronDown className="ml-auto size-5 animate-scroll-hint" aria-hidden="true" />
           </div>
         </div>
-        <span
-          className="absolute bottom-6 left-1/2 -translate-x-1/2 text-charcoal-foreground/60"
-          aria-hidden="true"
-        >
-          <ChevronDown className="size-6 animate-bounce" />
-        </span>
       </section>
+
 
       <ValueStrip />
 
