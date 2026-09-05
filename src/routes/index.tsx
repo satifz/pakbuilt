@@ -1,23 +1,26 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import aboutImage from "@/assets/about.jpg";
-import heroImage from "@/assets/hero.jpg";
+import heroArchitecture from "@/assets/hero-architecture.jpg";
 import {
   BenefitsSection,
   BoqBanner,
   BrandMessage,
   FaqSection,
-  IndustriesSection,
+  FaqSection as _Faq,
   ProcessSection,
-  SolutionsGrid,
   ValueStrip,
 } from "@/components/sections/Blocks";
-import { CategoryShowcase } from "@/components/sections/CategoryShowcase";
+import { BuildingSelector } from "@/components/sections/BuildingSelector";
 import { FeaturedProducts } from "@/components/sections/FeaturedProducts";
 import { FounderSection } from "@/components/sections/FounderSection";
+import { IndustryCards } from "@/components/sections/IndustryCards";
+import { SolutionCards } from "@/components/sections/SolutionCards";
+import { SolutionExplorer } from "@/components/sections/SolutionExplorer";
 import { Reveal } from "@/components/site/Reveal";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { Button } from "@/components/ui/button";
+
 
 const title = "PakBuilt | Building Materials & Construction Solutions Pakistan";
 const description =
