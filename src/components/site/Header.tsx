@@ -27,14 +27,14 @@ export function Header() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        "fixed inset-x-0 top-0 z-50 bg-charcoal text-charcoal-foreground transition-all duration-300",
         scrolled || open
-          ? "border-b border-border bg-background/85 backdrop-blur-md"
-          : "border-b border-transparent bg-background/40 backdrop-blur-sm",
+          ? "border-b border-charcoal-foreground/10 shadow-lift"
+          : "border-b border-charcoal-foreground/10",
       )}
     >
       <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:px-6 lg:px-8">
-        <Logo className="min-w-0" />
+        <Logo tone="dark" className="min-w-0" />
 
         <div className="flex items-center gap-1.5">
           <nav className="mr-2 hidden items-center gap-0.5 lg:flex" aria-label="Main">
@@ -44,12 +44,13 @@ export function Header() {
                 to={link.to}
                 activeOptions={{ exact: link.to === "/" }}
                 activeProps={{ className: "text-primary" }}
-                className="rounded-md px-3 py-2 text-sm font-medium text-foreground/80 transition-colors hover:text-primary"
+                className="rounded-md px-3 py-2 text-sm font-medium text-charcoal-foreground/70 transition-colors hover:text-charcoal-foreground"
               >
                 {link.label}
               </Link>
             ))}
           </nav>
+
 
           <Button asChild variant="ghost" size="icon" className="hidden sm:inline-flex lg:hidden">
             <a href={company.phoneHref} aria-label={`Call ${company.phone}`}>
