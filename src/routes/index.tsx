@@ -7,7 +7,7 @@ import {
   BoqBanner,
   BrandMessage,
   FaqSection,
-  FaqSection as _Faq,
+  ProcessSection,
   ProcessSection,
   ValueStrip,
 } from "@/components/sections/Blocks";
