@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { BoqBanner, ProcessSection, SolutionsGrid } from "@/components/sections/Blocks";
+import { BoqBanner, ProcessSection } from "@/components/sections/Blocks";
+import { SolutionCards } from "@/components/sections/SolutionCards";
 import { PageHero } from "@/components/site/PageHero";
 
 const title = "Solutions | Procurement, Fit-Out & HVAC Supply — PakBuilt";
@@ -14,9 +15,9 @@ export const Route = createFileRoute("/solutions")({
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "/solutions" },
+      { property: "og:url", content: "https://pakbuilt-build-pukka.lovable.app/solutions" },
     ],
-    links: [{ rel: "canonical", href: "/solutions" }],
+    links: [{ rel: "canonical", href: "https://pakbuilt-build-pukka.lovable.app/solutions" }],
   }),
   component: SolutionsPage,
 });
@@ -29,7 +30,7 @@ function SolutionsPage() {
         title="What We Do"
         subtitle="From individual requirements to project-based procurement, we help you find the right products and solutions."
       />
-      <SolutionsGrid heading="Six ways we support your project" />
+      <SolutionCards heading="Six ways we support your project" />
       <BoqBanner />
       <ProcessSection />
     </>
