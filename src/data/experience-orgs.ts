@@ -28,4 +28,5 @@ export const experienceOrgs: ExperienceOrg[] = [
   { name: "Trowers & Hamlins", logo: "/experience/th.png" },
   { name: "Clarendon Parker International", logo: "/experience/cparker.png" },
   { name: "Manpower", logo: "/experience/manpower.png" },
+  { name: "MACRO", logo: "/experience/macro.png" },
 ];
