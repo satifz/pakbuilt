@@ -106,6 +106,41 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
       { rel: "icon", href: "/favicon.png", type: "image/png" },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "PakBuilt",
+          url: "https://pakbuilt-build-pukka.lovable.app",
+          logo: "https://pakbuilt-build-pukka.lovable.app/pakbuilt-logo.png",
+          description:
+            "Building solutions and facilities management: building materials, procurement, fit-out, HVAC, MEP and facilities management services in Karachi and across Pakistan.",
+          telephone: "+92 300 2843259",
+          email: "info@pakbuilt.com",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress:
+              "Office # 2, Plot # 2/15, Sheet # K-28, Firdous Co-operative Housing Society, Nazimabad",
+            addressLocality: "Karachi",
+            addressRegion: "Sindh",
+            addressCountry: "PK",
+          },
+          areaServed: "Pakistan",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "PakBuilt",
+          url: "https://pakbuilt-build-pukka.lovable.app",
+          inLanguage: "en",
+        }),
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
