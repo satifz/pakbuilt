@@ -126,7 +126,7 @@ export function QuoteWizard({ defaultProduct = "" }: { defaultProduct?: string }
         e.preventDefault();
         next();
       }}
-      className="border border-border bg-card p-5 shadow-card sm:p-7"
+      className="rounded-xl border border-border bg-card p-5 shadow-card sm:p-7"
     >
       {/* Progress */}
       <div>
@@ -141,15 +141,15 @@ export function QuoteWizard({ defaultProduct = "" }: { defaultProduct?: string }
             <span
               key={s}
               className={cn(
-                "h-1 flex-1 transition-colors duration-300",
-                i <= step ? "bg-primary" : "bg-border",
+                "h-1 flex-1 origin-left rounded-full transition-[background-color,transform] duration-300 ease-out",
+                i <= step ? "scale-x-100 bg-primary" : "scale-x-100 bg-border",
               )}
             />
           ))}
         </div>
       </div>
 
-      <div className="mt-7 min-h-64">
+      <div key={step} className="mt-7 min-h-64 animate-fade-in">
         {step === 0 ? (
           <fieldset>
             <legend className="font-display text-xl font-bold">What do you need?</legend>
@@ -161,7 +161,7 @@ export function QuoteWizard({ defaultProduct = "" }: { defaultProduct?: string }
                   aria-pressed={values.need === n.id}
                   onClick={() => set("need", n.id)}
                   className={cn(
-                    "border p-4 text-left transition-all duration-200",
+                    "rounded-md border p-4 text-left transition-[border-color,background-color,transform] duration-200 ease-out hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none",
                     values.need === n.id
                       ? "border-primary bg-primary/5"
                       : "border-border hover:border-primary",
@@ -187,7 +187,7 @@ export function QuoteWizard({ defaultProduct = "" }: { defaultProduct?: string }
                   aria-pressed={values.product === name}
                   onClick={() => set("product", name)}
                   className={cn(
-                    "font-display border px-3.5 py-2 text-xs font-bold tracking-wide uppercase transition-colors",
+                    "font-display min-h-11 rounded-md border px-4 text-xs font-bold tracking-wide uppercase transition-[color,background-color,border-color] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none",
                     values.product === name
                       ? "border-primary bg-primary text-primary-foreground"
                       : "border-border text-foreground/70 hover:border-primary hover:text-primary",
