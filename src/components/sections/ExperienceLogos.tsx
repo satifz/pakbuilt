@@ -28,7 +28,7 @@ export function ExperienceLogos() {
         />
 
         <Reveal variant="fade" delay={80}>
-          <div className="group/strip relative mt-14 overflow-hidden">
+          <div className="group/strip relative mt-14 overflow-hidden motion-reduce:overflow-x-auto">
             {/* Soft edge fades so the strip reads as continuous */}
             <div
               aria-hidden="true"
