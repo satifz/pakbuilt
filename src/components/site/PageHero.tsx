@@ -38,17 +38,33 @@ export function PageHero({
         <div className="relative mx-auto max-w-7xl px-4 pt-32 pb-16 sm:px-6 lg:px-8 lg:pt-44 lg:pb-24">
           <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-end">
             <div className="max-w-3xl">
-              <span className="eyebrow rule-accent">{eyebrow}</span>
-              <h1 className="font-display mt-5 text-4xl leading-[0.95] font-bold text-balance sm:text-5xl lg:text-6xl">
+              <span
+                className="eyebrow rule-accent animate-rise"
+                style={{ animationDelay: "100ms" }}
+              >
+                {eyebrow}
+              </span>
+              <h1
+                className="font-display animate-rise mt-5 text-4xl leading-[0.95] font-bold text-balance sm:text-5xl lg:text-6xl"
+                style={{ animationDelay: "200ms" }}
+              >
                 {title}
               </h1>
               {subtitle ? (
-                <p className="mt-6 max-w-2xl text-base leading-relaxed text-charcoal-foreground/70 sm:text-lg">
+                <p
+                  className="animate-rise mt-6 max-w-2xl text-base leading-relaxed text-charcoal-foreground/70 sm:text-lg"
+                  style={{ animationDelay: "320ms" }}
+                >
                   {subtitle}
                 </p>
               ) : null}
             </div>
-            {aside ? <div className="lg:pb-2">{aside}</div> : null}
+            {aside ? (
+              <div className="animate-rise lg:pb-2" style={{ animationDelay: "440ms" }}>
+                {aside}
+              </div>
+            ) : null}
+
           </div>
         </div>
       </div>
