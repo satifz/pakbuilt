@@ -37,5 +37,5 @@ export const experienceOrgs: ExperienceOrg[] = [
     widthPercent: 95,
   },
   { name: "Manpower", logo: "/experience/manpower.png", widthPercent: 23 },
-  { name: "MACRO", logo: "/experience/macro.png", widthPercent: 92 },
+  { name: "MACRO", logo: "/experience/macro.png", widthPercent: 100 },
 ];
