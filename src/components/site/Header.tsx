@@ -7,7 +7,7 @@ import { company, navLinks } from "@/data/company";
 import { cn } from "@/lib/utils";
 
 /**
- * Sticky navigation. Transparent over the hero, solid once the page scrolls.
+ * Sticky navigation. Solid white, with a stronger blur and shadow once the page scrolls.
  */
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -30,10 +30,10 @@ export function Header() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 text-charcoal-foreground transition-[background-color,box-shadow,border-color] duration-500",
+        "fixed inset-x-0 top-0 z-50 text-foreground transition-[background-color,box-shadow,border-color] duration-500",
         scrolled || open
-          ? "border-b border-charcoal-foreground/10 bg-charcoal/95 shadow-lift backdrop-blur-md"
-          : "border-b border-transparent bg-transparent",
+          ? "border-b border-foreground/10 bg-white/95 shadow-lift backdrop-blur-md"
+          : "border-b border-foreground/5 bg-white/85 backdrop-blur-sm",
       )}
     >
       <div
@@ -42,7 +42,7 @@ export function Header() {
           scrolled ? "py-2.5" : "py-4",
         )}
       >
-        <Logo tone="dark" className="min-w-0" />
+        <Logo tone="light" className="min-w-0" />
 
         <div className="flex items-center gap-1.5">
           <nav className="mr-2 hidden items-center gap-0.5 lg:flex" aria-label="Main">
@@ -51,8 +51,8 @@ export function Header() {
                 key={link.to}
                 to={link.to}
                 activeOptions={{ exact: link.to === "/" }}
-                activeProps={{ className: "text-charcoal-foreground [&>span]:scale-x-100" }}
-                className="group relative rounded-none px-3 py-2 text-sm font-medium text-charcoal-foreground/65 transition-colors hover:text-charcoal-foreground"
+                activeProps={{ className: "text-foreground [&>span]:scale-x-100" }}
+                className="group relative rounded-none px-3 py-2 text-sm font-medium text-foreground/65 transition-colors hover:text-foreground"
               >
                 {link.label}
                 <span
@@ -63,7 +63,7 @@ export function Header() {
             ))}
           </nav>
 
-          <Button asChild variant="onDark" size="icon" className="hidden sm:inline-flex lg:hidden">
+          <Button asChild variant="onLight" size="icon" className="hidden sm:inline-flex lg:hidden">
             <a href={company.phoneHref} aria-label={`Call ${company.phone}`}>
               <Phone />
             </a>
@@ -77,7 +77,7 @@ export function Header() {
           </Button>
 
           <Button
-            variant="onDark"
+            variant="onLight"
             size="icon"
             className="lg:hidden"
             aria-label={open ? "Close menu" : "Open menu"}
@@ -92,7 +92,7 @@ export function Header() {
       {/* Mobile menu */}
       <div
         className={cn(
-          "overflow-hidden border-t border-charcoal-foreground/10 bg-charcoal transition-[max-height,opacity] duration-400 ease-out lg:hidden",
+          "overflow-hidden border-t border-foreground/10 bg-white transition-[max-height,opacity] duration-400 ease-out lg:hidden",
           open ? "max-h-[80vh] opacity-100" : "max-h-0 border-t-transparent opacity-0",
         )}
       >
@@ -106,7 +106,7 @@ export function Header() {
               activeProps={{ className: "text-primary" }}
               style={{ transitionDelay: open ? `${60 + i * 35}ms` : "0ms" }}
               className={cn(
-                "flex items-center justify-between border-b border-charcoal-foreground/10 py-4 text-lg font-medium transition-all duration-500 last:border-0",
+                "flex items-center justify-between border-b border-foreground/10 py-4 text-lg font-medium transition-all duration-500 last:border-0",
                 open ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0",
               )}
             >
