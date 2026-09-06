@@ -3,6 +3,7 @@ import { ArrowRight, ChevronDown, MessageCircle } from "lucide-react";
 import heroArchitecture from "@/assets/hero-architecture.jpg";
 import { BrandMessage, ValueStrip } from "@/components/sections/Blocks";
 import { BuildingSelector } from "@/components/sections/BuildingSelector";
+import { FacilitiesManagement } from "@/components/sections/FacilitiesManagement";
 import { OnePointOfContact } from "@/components/sections/OnePointOfContact";
 import { WhyPakbuilt } from "@/components/sections/WhyPakbuilt";
 import { Button } from "@/components/ui/button";
@@ -95,8 +96,8 @@ function Home() {
                 className="animate-rise mt-7 max-w-xl text-base leading-relaxed text-charcoal-foreground/75 sm:text-lg"
                 style={{ animationDelay: "460ms" }}
               >
-                Materials, procurement, fit-out and HVAC sourcing for the spaces that matter —
-                through one point of contact.
+                Building solutions and facilities management — from materials, procurement,
+                fit-out and HVAC through to keeping facilities running. One point of contact.
               </p>
               <div
                 className="animate-rise mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap"
@@ -144,6 +145,8 @@ function Home() {
             <span>Fit-Out</span>
             <span aria-hidden="true">•</span>
             <span>HVAC</span>
+            <span aria-hidden="true">•</span>
+            <span>Facilities Management</span>
             <a
               href="#one-point-heading"
               className="font-display ml-auto flex items-center gap-2 rounded-sm text-[0.65rem] font-bold tracking-[0.2em] text-charcoal-foreground/50 uppercase transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
@@ -157,6 +160,7 @@ function Home() {
 
       <ValueStrip />
       <OnePointOfContact />
+      <FacilitiesManagement />
       <BuildingSelector />
       <WhyPakbuilt />
       <BrandMessage />

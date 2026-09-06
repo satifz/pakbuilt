@@ -4,12 +4,13 @@ import { Logo } from "@/components/site/Logo";
 import { company, footerLinks, navLinks } from "@/data/company";
 
 const services = [
-  "Building Materials",
-  "Procurement",
-  "Fit-Out",
-  "HVAC",
-  "MEP",
-  "Trading & Sourcing",
+  { label: "Building Materials", to: "/solutions" as const },
+  { label: "Procurement", to: "/solutions" as const },
+  { label: "Fit-Out", to: "/solutions" as const },
+  { label: "HVAC", to: "/solutions" as const },
+  { label: "FM Consultancy", to: "/facilities-management" as const },
+  { label: "Hard Services", to: "/facilities-management" as const },
+  { label: "Soft Services", to: "/facilities-management" as const },
 ];
 
 export function Footer() {
@@ -21,7 +22,7 @@ export function Footer() {
             <div>
               <Logo tone="dark" />
               <p className="mt-5 max-w-xs text-sm leading-relaxed text-charcoal-foreground/70">
-                Construction materials, procurement and solutions for projects across Pakistan.
+                Build. Supply. Operate. Building solutions and facilities management for projects and facilities across Pakistan.
               </p>
               <div className="mt-6 flex gap-2">
                 {[
@@ -66,9 +67,9 @@ export function Footer() {
               </h3>
               <ul className="mt-5 space-y-2.5 text-sm text-charcoal-foreground/70">
                 {services.map((s) => (
-                  <li key={s}>
-                    <Link to="/solutions" className="transition-colors hover:text-primary">
-                      {s}
+                  <li key={s.label}>
+                    <Link to={s.to} className="transition-colors hover:text-primary">
+                      {s.label}
                     </Link>
                   </li>
                 ))}

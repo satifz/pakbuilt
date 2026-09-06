@@ -50,7 +50,7 @@ export function OnePointOfContact() {
     >
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
         <Reveal className="max-w-3xl">
-          <span className="eyebrow rule-accent">The PakBuilt way</span>
+          <span className="eyebrow rule-accent">01 — Building Solutions</span>
           <h2
             id="one-point-heading"
             className="font-display mt-5 text-4xl leading-[0.95] font-extrabold uppercase sm:text-5xl lg:text-6xl"
