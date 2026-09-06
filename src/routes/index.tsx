@@ -75,12 +75,6 @@ function Home() {
         <div className="relative mx-auto w-full max-w-7xl px-4 pt-36 pb-12 sm:px-6 lg:px-8 lg:pt-44 lg:pb-16">
           <div className="grid gap-10 lg:grid-cols-[1.4fr_0.6fr] lg:items-end">
             <div>
-              <span
-                className="eyebrow rule-accent animate-rise"
-                style={{ animationDelay: "120ms" }}
-              >
-                Building materials &amp; solutions — Karachi, Pakistan
-              </span>
               <h1 className="font-display mt-5 text-[2.75rem] leading-[0.86] font-extrabold tracking-[-0.02em] text-balance uppercase sm:text-[4.5rem] lg:text-[6.5rem]">
                 <span className="animate-rise block" style={{ animationDelay: "220ms" }}>
                   Building Better.
