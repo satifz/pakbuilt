@@ -59,7 +59,7 @@ function AboutPage() {
                 and building operations, now applied to procurement.
               </p>
               <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-                Based in New Golimar, Karachi, we work with requirements of every size: a single
+                Based in Karachi, we work with requirements of every size: a single
                 material for a home renovation, or a full BOQ for a commercial project.
               </p>
             </Reveal>

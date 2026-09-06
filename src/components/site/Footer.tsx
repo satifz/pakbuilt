@@ -96,9 +96,25 @@ export function Footer() {
                 <li className="flex gap-3">
                   <MapPin className="mt-0.5 size-4 shrink-0 text-primary" />
                   <span>
-                    {company.address.line1}
+                    <span className="font-display text-[0.7rem] font-bold tracking-[0.14em] uppercase">
+                      {company.headOffice.label}
+                    </span>
                     <br />
-                    {company.address.line2}
+                    {company.headOffice.line1}
+                    <br />
+                    {company.headOffice.line2}
+                  </span>
+                </li>
+                <li className="flex gap-3">
+                  <MapPin className="mt-0.5 size-4 shrink-0 text-primary" />
+                  <span>
+                    <span className="font-display text-[0.7rem] font-bold tracking-[0.14em] uppercase">
+                      {company.shop.label}
+                    </span>
+                    <br />
+                    {company.shop.line1}
+                    <br />
+                    {company.shop.line2}
                   </span>
                 </li>
               </ul>

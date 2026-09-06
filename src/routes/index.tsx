@@ -41,7 +41,8 @@ export const Route = createFileRoute("/")({
           email: "info@pakbuilt.com",
           address: {
             "@type": "PostalAddress",
-            streetAddress: "Shop #1535-A, Phool Gali, New Golimar",
+            streetAddress:
+              "Office # 2, Plot # 2/15, Sheet # K-28, Firdous Co-operative Housing Society, Nazimabad",
             addressLocality: "Karachi",
             addressCountry: "PK",
           },

@@ -9,11 +9,19 @@ export const company = {
   email: "info@pakbuilt.com",
   emailAlt: "Pakbuilt@hotmail.com",
   website: "www.pakbuilt.com",
-  address: {
+  headOffice: {
+    label: "Head Office",
+    line1: "Office # 2, Plot # 2/15, Sheet # K-28",
+    line2: "Firdous Co-operative Housing Society, Nazimabad, Karachi, Pakistan",
+    short: "Nazimabad, Karachi",
+  },
+  shop: {
+    label: "Shop",
     line1: "Shop #1535-A, Phool Gali",
     line2: "New Golimar, Karachi, Pakistan",
-    short: "New Golimar, Karachi, Pakistan",
+    short: "New Golimar, Karachi",
   },
+  locationShort: "Nazimabad & New Golimar, Karachi",
 } as const;
 
 export const navLinks = [
