@@ -22,17 +22,17 @@ export function ExperienceLogos() {
         />
 
         <Reveal variant="fade" delay={80}>
-          <ul className="mt-14 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 lg:grid-cols-6 lg:gap-x-10">
+          <ul className="mt-14 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-6 lg:gap-x-10">
             {experienceOrgs.map((org) => (
               <li key={org.name} className="group flex flex-col items-center gap-3">
-                <div className="flex h-16 w-full items-center justify-center sm:h-20">
+                <div className="flex h-8 w-full items-center justify-center sm:h-10">
                   {org.logo ? (
                     <img
                       src={org.logo}
                       alt={`${org.name} logo`}
                       loading="lazy"
                       decoding="async"
-                      className="max-h-full w-auto max-w-[80%] object-contain opacity-95 transition duration-300 ease-out group-hover:scale-[1.03] group-hover:opacity-100"
+                      className="max-h-full w-auto max-w-[90%] object-contain opacity-95 transition duration-300 ease-out group-hover:scale-[1.03] group-hover:opacity-100"
                     />
                   ) : (
                     <span
