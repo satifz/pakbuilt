@@ -25,7 +25,7 @@ export const experienceOrgs: ExperienceOrg[] = [
   { name: "Honeywell", logo: "/experience/honeywell.png", widthPercent: 82 },
   { name: "SAP", logo: "/experience/sap.png", widthPercent: 36 },
   { name: "HP", logo: "/experience/hp.png", widthPercent: 20 },
-  { name: "UPS", logo: "/experience/ups.png", widthPercent: 24 },
+  { name: "UPS", logo: "/experience/ups.png", widthPercent: 21 },
   { name: "ZTE", logo: "/experience/zte.png", widthPercent: 37 },
   { name: "MSD", logo: "/experience/msd.png", widthPercent: 47 },
   { name: "Key", logo: "/experience/key.png", widthPercent: 33 },
@@ -37,5 +37,5 @@ export const experienceOrgs: ExperienceOrg[] = [
     widthPercent: 95,
   },
   { name: "Manpower", logo: "/experience/manpower.png", widthPercent: 23 },
-  { name: "MACRO", logo: "/experience/macro.png", widthPercent: 100 },
+  { name: "MACRO", logo: "/experience/macro.png", widthPercent: 92 },
 ];
