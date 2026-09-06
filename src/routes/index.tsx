@@ -1,11 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, ChevronDown } from "lucide-react";
-import aboutImage from "@/assets/about.jpg";
 import heroArchitecture from "@/assets/hero-architecture.jpg";
 import { BrandMessage, ValueStrip } from "@/components/sections/Blocks";
 import { BuildingSelector } from "@/components/sections/BuildingSelector";
-import { Reveal } from "@/components/site/Reveal";
-import { SectionHeading } from "@/components/site/SectionHeading";
 import { Button } from "@/components/ui/button";
 
 
