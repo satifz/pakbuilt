@@ -9,7 +9,7 @@ export function FounderSection() {
   return (
     <section className="bg-charcoal text-charcoal-foreground">
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[0.85fr_1fr] lg:px-8 lg:py-28">
-        <Reveal>
+        <Reveal variant="clip">
           <div className="relative overflow-hidden rounded-xl border border-charcoal-foreground/10">
             <img
               src={founderImage}

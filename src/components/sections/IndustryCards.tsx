@@ -33,7 +33,7 @@ export function IndustryCards() {
                 .filter(Boolean) as string[];
 
               return (
-                <Reveal key={b.id} delay={i * 60}>
+                <Reveal key={b.id} delay={i * 80} variant="clip">
                   <div
                     onMouseEnter={() => setOpenId(b.id)}
                     onMouseLeave={() => setOpenId(null)}
@@ -44,8 +44,8 @@ export function IndustryCards() {
                       alt={`${b.title} building environment`}
                       loading="lazy"
                       className={cn(
-                        "absolute inset-0 size-full object-cover transition-all duration-700",
-                        open ? "scale-105 opacity-35" : "scale-100 opacity-55",
+                        "absolute inset-0 size-full object-cover transition-[transform,opacity] duration-700 ease-out",
+                        open ? "scale-[1.06] opacity-35" : "scale-100 opacity-55",
                       )}
                     />
                     <div
@@ -54,7 +54,14 @@ export function IndustryCards() {
                     />
 
                     <div className="relative flex h-full flex-col justify-end p-6">
-                      <h3 className="font-display text-2xl font-bold">{b.title}</h3>
+                      <h3
+                        className={cn(
+                          "font-display text-2xl font-bold transition-transform duration-500 ease-out",
+                          open && "-translate-y-0.5",
+                        )}
+                      >
+                        {b.title}
+                      </h3>
 
                       <div
                         className={cn(
@@ -82,7 +89,7 @@ export function IndustryCards() {
                       <div className="mt-4 flex items-center justify-between">
                         <Link
                           to="/contact"
-                          className="font-display inline-flex items-center gap-2 text-xs font-bold tracking-[0.16em] text-primary uppercase"
+                          className="link-arrow font-display inline-flex items-center gap-2 rounded-sm text-xs font-bold tracking-[0.16em] text-primary uppercase focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
                         >
                           Discuss this
                           <ArrowUpRight className="size-4" />
@@ -91,7 +98,7 @@ export function IndustryCards() {
                           type="button"
                           onClick={() => setOpenId(open ? null : b.id)}
                           aria-expanded={open}
-                          className="font-display border border-charcoal-foreground/25 px-3 py-1.5 text-[0.65rem] font-bold tracking-[0.16em] uppercase lg:hidden"
+                          className="font-display min-h-11 rounded-md border border-charcoal-foreground/25 px-4 text-[0.65rem] font-bold tracking-[0.16em] uppercase transition-colors duration-200 ease-out hover:border-primary hover:text-primary lg:hidden"
                         >
                           {open ? "Less" : "Details"}
                         </button>

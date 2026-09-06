@@ -36,7 +36,7 @@ function AboutPage() {
 
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-24">
         <div className="grid items-center gap-12 lg:grid-cols-2">
-          <Reveal>
+          <Reveal variant="clip">
             <img
               src={aboutImage}
               alt="Building materials organised in a supply yard"
