@@ -5,8 +5,14 @@ import { experienceOrgs } from "@/data/experience-orgs";
 /**
  * A restrained logo wall for organisations behind the founder's previous
  * professional experience. Deliberately not a client or partner section.
+ *
+ * Logos sit in uniform white tiles that scroll horizontally in a continuous
+ * strip. Each mark is sized by `widthPercent` in `experience-orgs.ts` so every
+ * tile carries the same optical weight.
  */
 export function ExperienceLogos() {
+  const strip = [...experienceOrgs, ...experienceOrgs];
+
   return (
     <section aria-labelledby="experience-behind-heading" className="bg-background">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
@@ -22,34 +28,47 @@ export function ExperienceLogos() {
         />
 
         <Reveal variant="fade" delay={80}>
-          <ul className="mt-14 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-6 lg:gap-x-10">
-            {experienceOrgs.map((org) => (
-              <li key={org.name} className="group flex flex-col items-center gap-3">
-                <div className="flex h-12 w-full items-center justify-center sm:h-14">
-                  {org.logo ? (
-                    <img
-                      src={org.logo}
-                      alt={`${org.name} logo`}
-                      loading="lazy"
-                      decoding="async"
-                      style={{ width: `${org.widthPercent ?? 100}%` }}
-                      className="max-h-full object-contain opacity-95 transition duration-300 ease-out group-hover:scale-[1.03] group-hover:opacity-100"
-                    />
-                  ) : (
-                    <span
-                      aria-hidden="true"
-                      className="font-display flex h-full w-full items-center justify-center border border-dashed border-foreground/15 text-[0.6rem] font-bold tracking-[0.22em] text-muted-foreground/60 uppercase transition-colors duration-300 group-hover:border-primary/40 group-hover:text-foreground/70"
-                    >
-                      Logo
-                    </span>
-                  )}
-                </div>
-                <span className="text-center text-[0.7rem] leading-tight tracking-[0.1em] text-muted-foreground/70 uppercase transition-colors duration-300 group-hover:text-foreground">
-                  {org.name}
-                </span>
-              </li>
-            ))}
-          </ul>
+          <div className="group/strip relative mt-14 overflow-hidden">
+            {/* Soft edge fades so the strip reads as continuous */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-background to-transparent sm:w-16"
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-background to-transparent sm:w-16"
+            />
+
+            <ul className="animate-marquee flex w-max items-stretch gap-4 group-hover/strip:[animation-play-state:paused] sm:gap-5">
+              {strip.map((org, index) => (
+                <li key={`${org.name}-${index}`} className="shrink-0">
+                  <div
+                    title={org.name}
+                    className="tile-light tile-hover flex h-20 w-32 items-center justify-center rounded-xl px-4 shadow-card sm:h-24 sm:w-40 sm:px-5"
+                  >
+                    {org.logo ? (
+                      <img
+                        src={org.logo}
+                        alt={`${org.name} logo`}
+                        loading="lazy"
+                        decoding="async"
+                        style={{ width: `${org.widthPercent ?? 100}%` }}
+                        className="max-h-10 object-contain sm:max-h-12"
+                        aria-hidden={index >= experienceOrgs.length ? "true" : undefined}
+                      />
+                    ) : (
+                      <span
+                        aria-hidden="true"
+                        className="font-display text-[0.6rem] font-bold tracking-[0.22em] text-muted-foreground/60 uppercase"
+                      >
+                        {org.name}
+                      </span>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         </Reveal>
 
         <Reveal variant="fade" delay={140}>
