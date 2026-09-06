@@ -3,6 +3,7 @@ import { ArrowRight, ChevronDown, MessageCircle } from "lucide-react";
 import heroArchitecture from "@/assets/hero-architecture.jpg";
 import { BrandMessage, ValueStrip } from "@/components/sections/Blocks";
 import { BuildingSelector } from "@/components/sections/BuildingSelector";
+import { ExperienceLogos } from "@/components/sections/ExperienceLogos";
 import { FacilitiesManagement } from "@/components/sections/FacilitiesManagement";
 import { OnePointOfContact } from "@/components/sections/OnePointOfContact";
 import { WhyPakbuilt } from "@/components/sections/WhyPakbuilt";
