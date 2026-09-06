@@ -35,7 +35,7 @@ export function SolutionCards({
 
       <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {solutions.map((s, i) => (
-          <Reveal key={s.id} delay={i * 60}>
+          <Reveal key={s.id} delay={i * 80} variant="clip">
             <Link
               to="/solutions"
               className="group relative flex h-80 flex-col justify-end overflow-hidden rounded-2xl bg-charcoal p-6 text-charcoal-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
@@ -45,7 +45,7 @@ export function SolutionCards({
                 alt=""
                 aria-hidden="true"
                 loading="lazy"
-                className="absolute inset-0 size-full object-cover opacity-35 transition-all duration-700 group-hover:scale-105 group-hover:opacity-45 group-focus-visible:scale-105"
+                className="absolute inset-0 size-full object-cover opacity-35 transition-[transform,opacity] duration-700 ease-out group-hover:scale-[1.06] group-hover:opacity-45 group-focus-visible:scale-[1.06]"
               />
               <div
                 className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/70 to-charcoal/20"

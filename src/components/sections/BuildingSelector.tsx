@@ -50,10 +50,10 @@ export function BuildingSelector() {
               aria-selected={b.id === activeId}
               onClick={() => setActiveId(b.id)}
               className={cn(
-                "font-display border px-4 py-2.5 text-xs font-bold tracking-[0.14em] uppercase transition-all duration-300",
+                "font-display min-h-11 rounded-md border px-4 text-xs font-bold tracking-[0.14em] uppercase transition-[color,background-color,border-color,opacity] duration-300 ease-out focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal focus-visible:outline-none",
                 b.id === activeId
                   ? "border-primary bg-primary text-primary-foreground"
-                  : "border-charcoal-foreground/20 text-charcoal-foreground/70 hover:border-primary hover:text-charcoal-foreground",
+                  : "border-charcoal-foreground/20 text-charcoal-foreground/55 opacity-80 hover:border-primary hover:text-charcoal-foreground hover:opacity-100",
               )}
             >
               {b.title}
@@ -67,7 +67,7 @@ export function BuildingSelector() {
               src={active.image}
               alt={`${active.title} project environment`}
               loading="lazy"
-              className="absolute inset-0 size-full object-cover"
+              className="absolute inset-0 size-full scale-[1.02] object-cover transition-transform duration-700 ease-out"
             />
             <div
               className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-transparent"
@@ -92,7 +92,7 @@ export function BuildingSelector() {
                     key={c.slug}
                     to="/products"
                     search={{ category: c.slug }}
-                    className="tile tile-hover group flex items-center justify-between gap-3 p-4"
+                    className="tile tile-hover group flex min-h-14 items-center justify-between gap-3 rounded-md p-4 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
                   >
                     <span className="font-display text-sm font-bold">{c.name}</span>
                     <ArrowRight className="size-4 shrink-0 text-primary transition-transform duration-300 group-hover:translate-x-1" />

@@ -102,7 +102,7 @@ export function BoqBanner() {
           </p>
         </Reveal>
 
-        <Reveal delay={120} className="relative">
+        <Reveal delay={120} variant="clip" className="relative">
           <img
             src={boqImage}
             alt="A bill of quantities and drawings laid out on a desk for pricing"

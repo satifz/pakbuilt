@@ -9,13 +9,13 @@ const categoryName = (slug: string) => categories.find((c) => c.slug === slug)?.
 
 export function ProductCard({ product }: { product: Product }) {
   return (
-    <article className="group flex h-full w-[17.5rem] shrink-0 flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift sm:w-auto">
+    <article className="group flex h-full w-[17.5rem] shrink-0 flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:border-primary/40 hover:shadow-lift sm:w-auto">
       <div className="aspect-[4/3] overflow-hidden">
         <img
           src={product.image}
           alt={product.name}
           loading="lazy"
-          className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]"
         />
       </div>
       <div className="flex flex-1 flex-col p-5">

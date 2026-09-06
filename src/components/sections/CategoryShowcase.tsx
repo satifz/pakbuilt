@@ -23,14 +23,14 @@ export function CategoryShowcase({ limit }: { limit?: number }) {
               <Link
                 to="/products"
                 search={{ category: c.slug }}
-                className="group block h-full overflow-hidden rounded-xl border border-border bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift"
+                className="group block h-full overflow-hidden rounded-xl border border-border bg-card shadow-card transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:border-primary/40 hover:shadow-lift"
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <img
                     src={c.image}
                     alt={`${c.name} supplied by PakBuilt`}
                     loading="lazy"
-                    className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]"
                   />
                   <span className="font-display absolute top-3 left-3 rounded-md bg-charcoal/80 px-2.5 py-1 text-[0.65rem] font-bold tracking-[0.14em] text-charcoal-foreground uppercase backdrop-blur-sm">
                     {c.group}

@@ -275,3 +275,100 @@
     transform: translateY(-3px);
   }
 }
+
+/* ─────────────────────────────────────────────
+   Motion system — one easing language sitewide
+   ───────────────────────────────────────────── */
+:root {
+  --ease-out-premium: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-premium: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 180ms;
+  --dur-ui: 320ms;
+  --dur-reveal: 700ms;
+}
+
+/* Vertical reveal with a soft clip — images appear rather than fade */
+@utility reveal-clip {
+  opacity: 0;
+  clip-path: inset(14% 0 0 0);
+  transform: scale(1.02);
+  transition:
+    opacity var(--dur-reveal) var(--ease-out-premium),
+    clip-path var(--dur-reveal) var(--ease-out-premium),
+    transform var(--dur-reveal) var(--ease-out-premium);
+
+  &.is-visible {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: none;
+  }
+}
+
+/* Plain opacity reveal for dense text groups */
+@utility reveal-fade {
+  opacity: 0;
+  transition: opacity var(--dur-reveal) var(--ease-out-premium);
+
+  &.is-visible {
+    opacity: 1;
+  }
+}
+
+/* Staggered entrance for the hero on first paint */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@utility animate-rise {
+  animation: rise-in 800ms var(--ease-out-premium) both;
+}
+
+@keyframes hero-image-in {
+  from {
+    opacity: 0;
+    clip-path: inset(12% 0 0 0);
+  }
+  to {
+    opacity: 0.45;
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@utility animate-hero-image {
+  animation: hero-image-in 1200ms var(--ease-out-premium) both;
+}
+
+/* Animated inline arrow link */
+@utility link-arrow {
+  & svg {
+    transition: transform var(--dur-micro) var(--ease-out-premium);
+  }
+  &:hover svg,
+  &:focus-visible svg {
+    transform: translateX(4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-clip,
+  .reveal-fade {
+    opacity: 1;
+    clip-path: none;
+    transform: none;
+    transition: none;
+  }
+
+  .animate-rise,
+  .animate-hero-image,
+  .animate-fade-in,
+  .animate-scroll-hint {
+    animation: none !important;
+  }
+}

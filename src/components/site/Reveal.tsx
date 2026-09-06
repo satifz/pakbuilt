@@ -7,10 +7,23 @@ interface RevealProps {
   /** Stagger in ms */
   delay?: number;
   as?: ElementType;
+  /**
+   * Motion flavour:
+   * - "up"   slide + fade (default, for content blocks)
+   * - "clip" clip-path image reveal (for large imagery)
+   * - "fade" opacity only (for dense text groups)
+   */
+  variant?: "up" | "clip" | "fade";
 }
 
-/** Fades + lifts its children into view once, using IntersectionObserver. */
-export function Reveal({ children, className, delay = 0, as: Tag = "div" }: RevealProps) {
+/** Reveals its children into view once, using IntersectionObserver. */
+export function Reveal({
+  children,
+  className,
+  delay = 0,
+  as: Tag = "div",
+  variant = "up",
+}: RevealProps) {
   const ref = useRef<HTMLElement | null>(null);
   const [visible, setVisible] = useState(false);
 
@@ -35,10 +48,12 @@ export function Reveal({ children, className, delay = 0, as: Tag = "div" }: Reve
     return () => observer.disconnect();
   }, []);
 
+  const base = variant === "clip" ? "reveal-clip" : variant === "fade" ? "reveal-fade" : "reveal";
+
   return (
     <Tag
       ref={ref}
-      className={cn("reveal", visible && "is-visible", className)}
+      className={cn(base, visible && "is-visible", className)}
       style={delay ? { transitionDelay: `${delay}ms` } : undefined}
     >
       {children}

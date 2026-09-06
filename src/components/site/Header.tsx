@@ -52,12 +52,13 @@ export function Header() {
                 to={link.to}
                 activeOptions={{ exact: link.to === "/" }}
                 activeProps={{ className: "text-foreground [&>span]:scale-x-100" }}
-                className="group relative rounded-none px-3 py-2 text-sm font-medium text-foreground/65 transition-colors hover:text-foreground"
+
+                className="group relative rounded-sm px-3 py-2 text-sm font-medium text-foreground/65 transition-colors duration-200 ease-out hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
               >
                 {link.label}
                 <span
                   aria-hidden="true"
-                  className="absolute inset-x-3 bottom-1 block h-px origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100"
+                  className="absolute inset-x-3 bottom-1 block h-[2px] origin-left scale-x-0 bg-primary transition-transform duration-300 ease-out group-hover:scale-x-100"
                 />
               </Link>
             ))}

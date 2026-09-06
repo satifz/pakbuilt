@@ -55,7 +55,7 @@ export function ProjectShowcase() {
                   src={p.image}
                   alt={p.title}
                   loading="lazy"
-                  className="absolute inset-0 size-full object-cover opacity-60 transition-transform duration-700 group-hover:scale-105"
+                  className="absolute inset-0 size-full object-cover opacity-60 transition-transform duration-700 ease-out group-hover:scale-[1.06]"
                 />
                 <div
                   className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/50 to-transparent"
