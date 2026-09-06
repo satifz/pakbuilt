@@ -39,6 +39,9 @@ weight as its neighbours, rather than all forced through one identical box.
 - Starting values: wide wordmarks 100%, mid-width marks ~80%, compact/square
   marks (UPS, HP, TH, Manpower, Key) ~34-45% — tuned from measured aspect ratios
   so every mark lands at roughly equal optical area.
+- UPS specifically: its shield sits in a 156x160 canvas but the artwork reads
+  smaller than HP's 160x160 circle, so UPS gets a slightly larger share than HP
+  and both are re-checked side by side in the screenshots.
 
 ## Verification
 
