@@ -17,9 +17,9 @@ export const Route = createFileRoute("/contact")({
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://pakbuilt-build-pukka.lovable.app/contact" },
+      { property: "og:url", content: "https://www.pakbuilt.com/contact" },
     ],
-    links: [{ rel: "canonical", href: "https://pakbuilt-build-pukka.lovable.app/contact" }],
+    links: [{ rel: "canonical", href: "https://www.pakbuilt.com/contact" }],
   }),
   component: ContactPage,
 });

@@ -1,4 +1,4 @@
-export const SITE_URL = "https://pakbuilt-build-pukka.lovable.app";
+export const SITE_URL = "https://www.pakbuilt.com";
 
 export const absoluteUrl = (path: string) =>
   path === "/" ? SITE_URL : `${SITE_URL}${path}`;
