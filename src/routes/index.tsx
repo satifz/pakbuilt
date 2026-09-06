@@ -2,19 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import aboutImage from "@/assets/about.jpg";
 import heroArchitecture from "@/assets/hero-architecture.jpg";
-import {
-  BenefitsSection,
-  BoqBanner,
-  BrandMessage,
-  FaqSection,
-  ProcessSection,
-  ValueStrip,
-} from "@/components/sections/Blocks";
+import { BrandMessage, ValueStrip } from "@/components/sections/Blocks";
 import { BuildingSelector } from "@/components/sections/BuildingSelector";
-import { FeaturedProducts } from "@/components/sections/FeaturedProducts";
-import { FounderSection } from "@/components/sections/FounderSection";
-import { IndustryCards } from "@/components/sections/IndustryCards";
-import { SolutionCards } from "@/components/sections/SolutionCards";
 import { SolutionExplorer } from "@/components/sections/SolutionExplorer";
 import { Reveal } from "@/components/site/Reveal";
 import { SectionHeading } from "@/components/site/SectionHeading";
@@ -173,15 +162,8 @@ function Home() {
         </div>
       </section>
 
-      <SolutionCards />
-      <BoqBanner />
-      <ProcessSection />
-      <BenefitsSection />
-      <FounderSection />
-      <IndustryCards />
-      <FeaturedProducts />
       <BrandMessage />
-      <FaqSection />
+
 
     </>
   );
