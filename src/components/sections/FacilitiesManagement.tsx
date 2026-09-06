@@ -49,8 +49,12 @@ export function FacilitiesManagement() {
                 <button
                   type="button"
                   aria-expanded={isActive}
-                  onMouseEnter={() => setActive(i)}
-                  onMouseLeave={() => setActive(null)}
+                  onPointerEnter={(e) => {
+                    if (e.pointerType === "mouse") setActive(i);
+                  }}
+                  onPointerLeave={(e) => {
+                    if (e.pointerType === "mouse") setActive(null);
+                  }}
                   onFocus={() => setActive(i)}
                   onBlur={() => setActive(null)}
                   onClick={() => setActive(isActive ? null : i)}
