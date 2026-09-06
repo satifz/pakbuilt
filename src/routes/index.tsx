@@ -92,10 +92,7 @@ function Home() {
             </div>
 
             <div className="border-l border-charcoal-foreground/15 pl-6">
-              <span className="font-display text-4xl leading-none font-bold text-primary lg:text-5xl">
-                Build Pukka.
-              </span>
-              <p className="mt-4 max-w-xs text-sm leading-relaxed text-charcoal-foreground/60">
+              <p className="max-w-xs text-sm leading-relaxed text-charcoal-foreground/60">
                 Materials, procurement and building-services sourcing through one point of contact.
               </p>
             </div>
