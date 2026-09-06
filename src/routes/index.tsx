@@ -4,6 +4,8 @@ import heroArchitecture from "@/assets/hero-architecture.jpg";
 import { BrandMessage, ValueStrip } from "@/components/sections/Blocks";
 import { BuildingSelector } from "@/components/sections/BuildingSelector";
 import { Button } from "@/components/ui/button";
+import { useParallax } from "@/hooks/use-parallax";
+
 
 
 const title = "PakBuilt | Building Materials & Construction Solutions Pakistan";
