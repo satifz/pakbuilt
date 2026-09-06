@@ -4,7 +4,6 @@ import aboutImage from "@/assets/about.jpg";
 import heroArchitecture from "@/assets/hero-architecture.jpg";
 import { BrandMessage, ValueStrip } from "@/components/sections/Blocks";
 import { BuildingSelector } from "@/components/sections/BuildingSelector";
-import { SolutionExplorer } from "@/components/sections/SolutionExplorer";
 import { Reveal } from "@/components/site/Reveal";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { Button } from "@/components/ui/button";
@@ -109,8 +108,8 @@ function Home() {
             <span aria-hidden="true">•</span>
             <span>HVAC</span>
             <a
-              href="#solutions-explorer"
-              aria-label="Scroll to solutions"
+              href="#building-heading"
+              aria-label="Scroll to what are you building"
               className="ml-auto text-charcoal-foreground/50 transition-colors hover:text-primary"
             >
               <ChevronDown className="size-5 animate-scroll-hint" aria-hidden="true" />
@@ -120,7 +119,6 @@ function Home() {
       </section>
 
       <ValueStrip />
-      <SolutionExplorer limit={8} />
       <BuildingSelector />
 
 
