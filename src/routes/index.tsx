@@ -49,39 +49,36 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const heroImageRef = useParallax<HTMLImageElement>(0.1);
+  const heroImageRef = useParallax<HTMLImageElement>(0.08);
 
   return (
     <>
       {/* Cinematic hero */}
-      <section className="relative isolate flex min-h-[92svh] items-end overflow-hidden bg-charcoal text-charcoal-foreground">
-        <div className="animate-hero-image absolute inset-0 overflow-hidden opacity-45">
+      <section className="relative isolate flex min-h-[88svh] items-end overflow-hidden bg-charcoal text-charcoal-foreground lg:min-h-[94svh]">
+        <div className="animate-hero-image absolute inset-0 overflow-hidden opacity-55">
           <img
             ref={heroImageRef}
             src={heroArchitecture}
             alt="Modern architectural facade of a commercial building"
-            className="animate-slow-pan size-full object-cover will-change-transform"
+            className="animate-slow-pan size-full object-cover object-center will-change-transform"
           />
         </div>
         <div
-          className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/70 to-charcoal/30"
+          className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/65 to-charcoal/25"
           aria-hidden="true"
         />
 
-        <div className="relative mx-auto w-full max-w-7xl px-4 pt-40 pb-14 sm:px-6 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-[1.35fr_0.65fr] lg:items-end">
+        <div className="relative mx-auto w-full max-w-7xl px-4 pt-36 pb-12 sm:px-6 lg:px-8 lg:pt-44 lg:pb-16">
+          <div className="grid gap-10 lg:grid-cols-[1.4fr_0.6fr] lg:items-end">
             <div>
               <span
                 className="eyebrow rule-accent animate-rise"
                 style={{ animationDelay: "120ms" }}
               >
-                Karachi, Pakistan
+                Building materials &amp; solutions — Karachi, Pakistan
               </span>
-              <h1 className="font-display mt-5 text-[2.6rem] leading-[0.9] font-bold text-balance sm:text-6xl lg:text-[5.2rem]">
-                <span
-                  className="animate-rise block"
-                  style={{ animationDelay: "220ms" }}
-                >
+              <h1 className="font-display mt-5 text-[2.75rem] leading-[0.86] font-extrabold tracking-[-0.02em] text-balance uppercase sm:text-[4.5rem] lg:text-[6.5rem]">
+                <span className="animate-rise block" style={{ animationDelay: "220ms" }}>
                   Building Better.
                 </span>
                 <span
@@ -95,20 +92,27 @@ function Home() {
                 className="animate-rise mt-7 max-w-xl text-base leading-relaxed text-charcoal-foreground/75 sm:text-lg"
                 style={{ animationDelay: "460ms" }}
               >
-                Building materials and practical solutions for the spaces that matter.
+                Materials, procurement, fit-out and HVAC sourcing for the spaces that matter —
+                through one point of contact.
               </p>
               <div
-                className="animate-rise mt-9 flex flex-wrap gap-3"
+                className="animate-rise mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap"
                 style={{ animationDelay: "560ms" }}
               >
                 <Button asChild variant="cta" size="xl" className="group">
-                  <Link to="/solutions">
-                    Explore Solutions
+                  <Link to="/contact">
+                    Request a Quote
                     <ArrowRight className="transition-transform duration-200 ease-out group-hover:translate-x-1" />
                   </Link>
                 </Button>
                 <Button asChild variant="onDark" size="xl">
-                  <Link to="/contact">Request a Quote</Link>
+                  <Link to="/solutions">Explore Solutions</Link>
+                </Button>
+                <Button asChild variant="whatsapp" size="xl">
+                  <a href={company.whatsappHref} target="_blank" rel="noreferrer">
+                    <MessageCircle />
+                    WhatsApp
+                  </a>
                 </Button>
               </div>
             </div>
@@ -127,7 +131,7 @@ function Home() {
           </div>
 
           <div
-            className="animate-rise mt-14 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-charcoal-foreground/10 pt-5 text-[0.65rem] font-bold tracking-[0.2em] text-charcoal-foreground/40 uppercase"
+            className="animate-rise mt-12 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-charcoal-foreground/10 pt-5 text-[0.65rem] font-bold tracking-[0.2em] text-charcoal-foreground/40 uppercase"
             style={{ animationDelay: "760ms" }}
           >
             <span>Building Materials</span>
@@ -138,24 +142,22 @@ function Home() {
             <span aria-hidden="true">•</span>
             <span>HVAC</span>
             <a
-              href="#building-heading"
-              aria-label="Scroll to what are you building"
-              className="ml-auto rounded-sm text-charcoal-foreground/50 transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+              href="#one-point-heading"
+              className="font-display ml-auto flex items-center gap-2 rounded-sm text-[0.65rem] font-bold tracking-[0.2em] text-charcoal-foreground/50 uppercase transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
             >
-              <ChevronDown className="size-5 animate-scroll-hint" aria-hidden="true" />
+              Scroll to explore
+              <ChevronDown className="size-4 animate-scroll-hint" aria-hidden="true" />
             </a>
           </div>
         </div>
       </section>
 
-
       <ValueStrip />
+      <OnePointOfContact />
       <BuildingSelector />
-
-
+      <WhyPakbuilt />
       <BrandMessage />
-
-
     </>
   );
 }
+
