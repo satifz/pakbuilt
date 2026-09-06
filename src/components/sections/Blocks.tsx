@@ -252,7 +252,7 @@ const contactItems = [
   },
   { label: "Call", value: company.phone, href: company.phoneHref, icon: Phone },
   { label: "Email", value: company.email, href: `mailto:${company.email}`, icon: Mail },
-  { label: "Location", value: company.address.short, icon: MapPin },
+  { label: "Location", value: company.locationShort, icon: MapPin },
 ];
 
 export function ContactDetails({ tone = "light" }: { tone?: "light" | "dark" }) {

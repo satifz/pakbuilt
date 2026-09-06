@@ -48,14 +48,22 @@ function ContactPage() {
             </div>
             <div className="mt-6 rounded-xl border border-border bg-sand p-5 text-sm leading-relaxed text-muted-foreground">
               <p className="font-display text-xs font-bold tracking-[0.16em] text-foreground uppercase">
-                Office
+                {company.headOffice.label}
               </p>
               <p className="mt-2">
-                {company.address.line1}
+                {company.headOffice.line1}
                 <br />
-                {company.address.line2}
+                {company.headOffice.line2}
               </p>
-              <p className="mt-3">
+              <p className="mt-5 font-display text-xs font-bold tracking-[0.16em] text-foreground uppercase">
+                {company.shop.label}
+              </p>
+              <p className="mt-2">
+                {company.shop.line1}
+                <br />
+                {company.shop.line2}
+              </p>
+              <p className="mt-5 border-t border-border pt-4">
                 {company.email} · {company.emailAlt}
               </p>
             </div>
