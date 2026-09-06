@@ -32,7 +32,7 @@ export function ExperienceLogos() {
                       alt={`${org.name} logo`}
                       loading="lazy"
                       decoding="async"
-                      className="max-h-full w-auto max-w-[80%] object-contain opacity-55 grayscale transition duration-300 ease-out group-hover:scale-[1.03] group-hover:opacity-100 group-hover:grayscale-0"
+                      className="max-h-full w-auto max-w-[80%] object-contain opacity-95 transition duration-300 ease-out group-hover:scale-[1.03] group-hover:opacity-100"
                     />
                   ) : (
                     <span
