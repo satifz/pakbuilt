@@ -108,8 +108,8 @@ function Home() {
             <span aria-hidden="true">•</span>
             <span>HVAC</span>
             <a
-              href="#solutions-explorer"
-              aria-label="Scroll to solutions"
+              href="#building-heading"
+              aria-label="Scroll to what are you building"
               className="ml-auto text-charcoal-foreground/50 transition-colors hover:text-primary"
             >
               <ChevronDown className="size-5 animate-scroll-hint" aria-hidden="true" />
