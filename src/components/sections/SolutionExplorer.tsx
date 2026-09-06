@@ -84,7 +84,7 @@ export function SolutionExplorer({ limit = 8 }: { limit?: number }) {
                         src={c.image}
                         alt={`${c.name} supplied by PakBuilt`}
                         loading="lazy"
-                        className="mb-4 aspect-[16/9] w-full object-cover lg:hidden"
+                        className="mb-4 aspect-[16/9] w-full rounded-xl object-cover lg:hidden"
                       />
                       <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
                         {c.blurb}
@@ -115,7 +115,7 @@ export function SolutionExplorer({ limit = 8 }: { limit?: number }) {
           </ul>
 
           <div className="sticky top-28 hidden lg:block">
-            <div className="relative aspect-[4/5] overflow-hidden bg-charcoal">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-charcoal">
               {list.map((c, i) => (
                 <img
                   key={c.slug}
