@@ -7,7 +7,7 @@ import { PageHero } from "@/components/site/PageHero";
 const title = "Projects | PakBuilt Building Materials & Fit-Out Karachi";
 const description =
   "PakBuilt project references are published as they complete. Send us your requirement and see how we handle specification, sourcing and delivery.";
-const url = "https://pakbuilt-build-pukka.lovable.app/projects";
+const url = "https://www.pakbuilt.com/projects";
 
 export const Route = createFileRoute("/projects")({
   head: () => ({

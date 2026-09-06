@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://pakbuilt-build-pukka.lovable.app/sitemap.xml
+Sitemap: https://www.pakbuilt.com/sitemap.xml

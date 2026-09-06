@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 const title = "Facilities Management Services | PakBuilt";
 const description =
   "PakBuilt provides facilities management solutions including FM consultancy, hard services and soft services for commercial and other built environments in Pakistan.";
-const url = "https://pakbuilt-build-pukka.lovable.app/facilities-management";
+const url = "https://www.pakbuilt.com/facilities-management";
 
 export const Route = createFileRoute("/facilities-management")({
   head: () => ({
