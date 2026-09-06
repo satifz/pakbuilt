@@ -38,7 +38,7 @@ export function SolutionCards({
           <Reveal key={s.id} delay={i * 60}>
             <Link
               to="/solutions"
-              className="group relative flex h-80 flex-col justify-end overflow-hidden bg-charcoal p-6 text-charcoal-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+              className="group relative flex h-80 flex-col justify-end overflow-hidden rounded-2xl bg-charcoal p-6 text-charcoal-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
             >
               <img
                 src={imageFor[s.id] ?? catConstruction}

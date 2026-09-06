@@ -37,7 +37,7 @@ export function IndustryCards() {
                   <div
                     onMouseEnter={() => setOpenId(b.id)}
                     onMouseLeave={() => setOpenId(null)}
-                    className="group relative h-96 overflow-hidden bg-charcoal text-charcoal-foreground"
+                    className="group relative h-96 overflow-hidden rounded-2xl bg-charcoal text-charcoal-foreground"
                   >
                     <img
                       src={b.image}

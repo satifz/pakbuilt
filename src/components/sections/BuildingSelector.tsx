@@ -62,7 +62,7 @@ export function BuildingSelector() {
         </div>
 
         <div key={active.id} className="mt-10 grid animate-fade-in gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="relative min-h-64 overflow-hidden">
+          <div className="relative min-h-64 overflow-hidden rounded-2xl">
             <img
               src={active.image}
               alt={`${active.title} project environment`}

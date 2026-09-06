@@ -50,7 +50,7 @@ export function ProjectShowcase() {
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {shown.map((p, i) => (
             <Reveal key={p.slug} delay={i * 60}>
-              <article className="group relative h-80 overflow-hidden bg-charcoal text-charcoal-foreground">
+              <article className="group relative h-80 overflow-hidden rounded-2xl bg-charcoal text-charcoal-foreground">
                 <img
                   src={p.image}
                   alt={p.title}
