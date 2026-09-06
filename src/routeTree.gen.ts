@@ -11,11 +11,20 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as BuildingMaterialsRouteImport } from './routes/building-materials'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as FacilitiesManagementRouteImport } from './routes/facilities-management'
+import { Route as FitOutRouteImport } from './routes/fit-out'
+import { Route as FmConsultancyRouteImport } from './routes/fm-consultancy'
+import { Route as HardServicesRouteImport } from './routes/hard-services'
+import { Route as HvacRouteImport } from './routes/hvac'
 import { Route as IndustriesRouteImport } from './routes/industries'
+import { Route as MepRouteImport } from './routes/mep'
+import { Route as ProcurementRouteImport } from './routes/procurement'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SoftServicesRouteImport } from './routes/soft-services'
 import { Route as SolutionsRouteImport } from './routes/solutions'
 import { Route as WhyPakbuiltRouteImport } from './routes/why-pakbuilt'
 
@@ -29,6 +38,11 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BuildingMaterialsRoute = BuildingMaterialsRouteImport.update({
+  id: '/building-materials',
+  path: '/building-materials',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
@@ -39,9 +53,39 @@ const FacilitiesManagementRoute = FacilitiesManagementRouteImport.update({
   path: '/facilities-management',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FitOutRoute = FitOutRouteImport.update({
+  id: '/fit-out',
+  path: '/fit-out',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FmConsultancyRoute = FmConsultancyRouteImport.update({
+  id: '/fm-consultancy',
+  path: '/fm-consultancy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HardServicesRoute = HardServicesRouteImport.update({
+  id: '/hard-services',
+  path: '/hard-services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HvacRoute = HvacRouteImport.update({
+  id: '/hvac',
+  path: '/hvac',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndustriesRoute = IndustriesRouteImport.update({
   id: '/industries',
   path: '/industries',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MepRoute = MepRouteImport.update({
+  id: '/mep',
+  path: '/mep',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProcurementRoute = ProcurementRouteImport.update({
+  id: '/procurement',
+  path: '/procurement',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductsRoute = ProductsRouteImport.update({
@@ -52,6 +96,16 @@ const ProductsRoute = ProductsRouteImport.update({
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SoftServicesRoute = SoftServicesRouteImport.update({
+  id: '/soft-services',
+  path: '/soft-services',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SolutionsRoute = SolutionsRouteImport.update({
@@ -68,22 +122,40 @@ const WhyPakbuiltRoute = WhyPakbuiltRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/building-materials': typeof BuildingMaterialsRoute
   '/contact': typeof ContactRoute
   '/facilities-management': typeof FacilitiesManagementRoute
+  '/fit-out': typeof FitOutRoute
+  '/fm-consultancy': typeof FmConsultancyRoute
+  '/hard-services': typeof HardServicesRoute
+  '/hvac': typeof HvacRoute
   '/industries': typeof IndustriesRoute
+  '/mep': typeof MepRoute
+  '/procurement': typeof ProcurementRoute
   '/products': typeof ProductsRoute
   '/projects': typeof ProjectsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/soft-services': typeof SoftServicesRoute
   '/solutions': typeof SolutionsRoute
   '/why-pakbuilt': typeof WhyPakbuiltRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/building-materials': typeof BuildingMaterialsRoute
   '/contact': typeof ContactRoute
   '/facilities-management': typeof FacilitiesManagementRoute
+  '/fit-out': typeof FitOutRoute
+  '/fm-consultancy': typeof FmConsultancyRoute
+  '/hard-services': typeof HardServicesRoute
+  '/hvac': typeof HvacRoute
   '/industries': typeof IndustriesRoute
+  '/mep': typeof MepRoute
+  '/procurement': typeof ProcurementRoute
   '/products': typeof ProductsRoute
   '/projects': typeof ProjectsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/soft-services': typeof SoftServicesRoute
   '/solutions': typeof SolutionsRoute
   '/why-pakbuilt': typeof WhyPakbuiltRoute
 }
@@ -91,11 +163,20 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/building-materials': typeof BuildingMaterialsRoute
   '/contact': typeof ContactRoute
   '/facilities-management': typeof FacilitiesManagementRoute
+  '/fit-out': typeof FitOutRoute
+  '/fm-consultancy': typeof FmConsultancyRoute
+  '/hard-services': typeof HardServicesRoute
+  '/hvac': typeof HvacRoute
   '/industries': typeof IndustriesRoute
+  '/mep': typeof MepRoute
+  '/procurement': typeof ProcurementRoute
   '/products': typeof ProductsRoute
   '/projects': typeof ProjectsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/soft-services': typeof SoftServicesRoute
   '/solutions': typeof SolutionsRoute
   '/why-pakbuilt': typeof WhyPakbuiltRoute
 }
@@ -104,33 +185,60 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/building-materials'
     | '/contact'
     | '/facilities-management'
+    | '/fit-out'
+    | '/fm-consultancy'
+    | '/hard-services'
+    | '/hvac'
     | '/industries'
+    | '/mep'
+    | '/procurement'
     | '/products'
     | '/projects'
+    | '/sitemap.xml'
+    | '/soft-services'
     | '/solutions'
     | '/why-pakbuilt'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/building-materials'
     | '/contact'
     | '/facilities-management'
+    | '/fit-out'
+    | '/fm-consultancy'
+    | '/hard-services'
+    | '/hvac'
     | '/industries'
+    | '/mep'
+    | '/procurement'
     | '/products'
     | '/projects'
+    | '/sitemap.xml'
+    | '/soft-services'
     | '/solutions'
     | '/why-pakbuilt'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/building-materials'
     | '/contact'
     | '/facilities-management'
+    | '/fit-out'
+    | '/fm-consultancy'
+    | '/hard-services'
+    | '/hvac'
     | '/industries'
+    | '/mep'
+    | '/procurement'
     | '/products'
     | '/projects'
+    | '/sitemap.xml'
+    | '/soft-services'
     | '/solutions'
     | '/why-pakbuilt'
   fileRoutesById: FileRoutesById
@@ -138,11 +246,20 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  BuildingMaterialsRoute: typeof BuildingMaterialsRoute
   ContactRoute: typeof ContactRoute
   FacilitiesManagementRoute: typeof FacilitiesManagementRoute
+  FitOutRoute: typeof FitOutRoute
+  FmConsultancyRoute: typeof FmConsultancyRoute
+  HardServicesRoute: typeof HardServicesRoute
+  HvacRoute: typeof HvacRoute
   IndustriesRoute: typeof IndustriesRoute
+  MepRoute: typeof MepRoute
+  ProcurementRoute: typeof ProcurementRoute
   ProductsRoute: typeof ProductsRoute
   ProjectsRoute: typeof ProjectsRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  SoftServicesRoute: typeof SoftServicesRoute
   SolutionsRoute: typeof SolutionsRoute
   WhyPakbuiltRoute: typeof WhyPakbuiltRoute
 }
@@ -163,6 +280,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/building-materials': {
+      id: '/building-materials'
+      path: '/building-materials'
+      fullPath: '/building-materials'
+      preLoaderRoute: typeof BuildingMaterialsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
@@ -177,11 +301,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FacilitiesManagementRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/fit-out': {
+      id: '/fit-out'
+      path: '/fit-out'
+      fullPath: '/fit-out'
+      preLoaderRoute: typeof FitOutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fm-consultancy': {
+      id: '/fm-consultancy'
+      path: '/fm-consultancy'
+      fullPath: '/fm-consultancy'
+      preLoaderRoute: typeof FmConsultancyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hard-services': {
+      id: '/hard-services'
+      path: '/hard-services'
+      fullPath: '/hard-services'
+      preLoaderRoute: typeof HardServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hvac': {
+      id: '/hvac'
+      path: '/hvac'
+      fullPath: '/hvac'
+      preLoaderRoute: typeof HvacRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/industries': {
       id: '/industries'
       path: '/industries'
       fullPath: '/industries'
       preLoaderRoute: typeof IndustriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mep': {
+      id: '/mep'
+      path: '/mep'
+      fullPath: '/mep'
+      preLoaderRoute: typeof MepRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/procurement': {
+      id: '/procurement'
+      path: '/procurement'
+      fullPath: '/procurement'
+      preLoaderRoute: typeof ProcurementRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/products': {
@@ -196,6 +362,20 @@ declare module '@tanstack/react-router' {
       path: '/projects'
       fullPath: '/projects'
       preLoaderRoute: typeof ProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/soft-services': {
+      id: '/soft-services'
+      path: '/soft-services'
+      fullPath: '/soft-services'
+      preLoaderRoute: typeof SoftServicesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/solutions': {
@@ -218,11 +398,20 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  BuildingMaterialsRoute: BuildingMaterialsRoute,
   ContactRoute: ContactRoute,
   FacilitiesManagementRoute: FacilitiesManagementRoute,
+  FitOutRoute: FitOutRoute,
+  FmConsultancyRoute: FmConsultancyRoute,
+  HardServicesRoute: HardServicesRoute,
+  HvacRoute: HvacRoute,
   IndustriesRoute: IndustriesRoute,
+  MepRoute: MepRoute,
+  ProcurementRoute: ProcurementRoute,
   ProductsRoute: ProductsRoute,
   ProjectsRoute: ProjectsRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
+  SoftServicesRoute: SoftServicesRoute,
   SolutionsRoute: SolutionsRoute,
   WhyPakbuiltRoute: WhyPakbuiltRoute,
 }

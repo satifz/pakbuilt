@@ -4,13 +4,15 @@ import { Logo } from "@/components/site/Logo";
 import { company, footerLinks, navLinks } from "@/data/company";
 
 const services = [
-  { label: "Building Materials", to: "/solutions" as const },
-  { label: "Procurement", to: "/solutions" as const },
-  { label: "Fit-Out", to: "/solutions" as const },
-  { label: "HVAC", to: "/solutions" as const },
-  { label: "FM Consultancy", to: "/facilities-management" as const },
-  { label: "Hard Services", to: "/facilities-management" as const },
-  { label: "Soft Services", to: "/facilities-management" as const },
+  { label: "Building Materials", to: "/building-materials" as const },
+  { label: "Procurement", to: "/procurement" as const },
+  { label: "Fit-Out", to: "/fit-out" as const },
+  { label: "HVAC", to: "/hvac" as const },
+  { label: "MEP & Building Services", to: "/mep" as const },
+  { label: "Facilities Management", to: "/facilities-management" as const },
+  { label: "FM Consultancy", to: "/fm-consultancy" as const },
+  { label: "Hard Services", to: "/hard-services" as const },
+  { label: "Soft Services", to: "/soft-services" as const },
 ];
 
 export function Footer() {

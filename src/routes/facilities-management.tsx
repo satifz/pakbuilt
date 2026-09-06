@@ -2,10 +2,14 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, ArrowUpRight, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import fmHero from "@/assets/fm-hero.jpg";
+import { ServiceLinks } from "@/components/sections/ServiceLinks";
+import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import { Reveal } from "@/components/site/Reveal";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { Button } from "@/components/ui/button";
 import { company } from "@/data/company";
+import { fmConsultancy, hardServices, softServices } from "@/data/services";
+import { breadcrumbLd, jsonLd } from "@/lib/seo";
 import { fmApproach, fmIndustries, fmServices, fmValue } from "@/data/fm";
 import { useParallax } from "@/hooks/use-parallax";
 import { cn } from "@/lib/utils";
@@ -40,6 +44,12 @@ export const Route = createFileRoute("/facilities-management")({
           description,
         }),
       },
+      jsonLd(
+        breadcrumbLd([
+          { name: "Home", path: "/" },
+          { name: "Facilities Management", path: "/facilities-management" },
+        ]),
+      ),
     ],
   }),
   component: FacilitiesManagementPage,
@@ -112,6 +122,20 @@ function FacilitiesManagementPage() {
           </div>
         </div>
       </section>
+
+      <Breadcrumbs
+        trail={[
+          { name: "Home", path: "/" },
+          { name: "Facilities Management", path: "/facilities-management" },
+        ]}
+      />
+
+      <ServiceLinks
+        eyebrow="Facilities management"
+        heading="Our facilities management services"
+        intro="Each FM service has a dedicated page covering scope and how it is delivered."
+        services={[fmConsultancy, hardServices, softServices]}
+      />
 
       {/* Service overview */}
       <section id="fm-services" className="scroll-mt-24 bg-background">
