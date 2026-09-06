@@ -119,7 +119,6 @@ function Home() {
       </section>
 
       <ValueStrip />
-      <SolutionExplorer limit={8} />
       <BuildingSelector />
 
 
