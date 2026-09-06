@@ -19,7 +19,7 @@ export function Footer() {
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
           <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
             <div>
-              <Logo tone="dark" withTagline />
+              <Logo tone="dark" />
               <p className="mt-5 max-w-xs text-sm leading-relaxed text-charcoal-foreground/70">
                 Construction materials, procurement and solutions for projects across Pakistan.
               </p>
