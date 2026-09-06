@@ -121,7 +121,7 @@ function Home() {
             </div>
 
             <div
-              className="animate-rise border-l border-charcoal-foreground/15 pl-6"
+              className="animate-rise hidden border-l border-charcoal-foreground/15 pl-6 lg:block"
               style={{ animationDelay: "660ms" }}
             >
               <span className="font-display text-2xl leading-tight font-bold text-primary lg:text-3xl">
