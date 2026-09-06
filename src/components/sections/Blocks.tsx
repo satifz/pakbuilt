@@ -208,7 +208,8 @@ export function BrandMessage() {
             You Build. We Source.
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-primary-foreground/85 sm:text-lg">
-            Less running around. Less guesswork. More getting things done.
+            Send us your requirement and we'll take it from there.
+
           </p>
           <div className="mt-8">
             <Button asChild variant="onLight" size="xl">
