@@ -33,7 +33,6 @@ export const Route = createFileRoute("/")({
           "@context": "https://schema.org",
           "@type": "LocalBusiness",
           name: "PakBuilt",
-          slogan: "Build Pukka.",
           description,
           telephone: "+92 300 2843259",
           email: "info@pakbuilt.com",
