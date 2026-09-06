@@ -33,7 +33,6 @@ export const Route = createFileRoute("/")({
           "@context": "https://schema.org",
           "@type": "LocalBusiness",
           name: "PakBuilt",
-          slogan: "Build Pukka.",
           description,
           telephone: "+92 300 2843259",
           email: "info@pakbuilt.com",
@@ -92,11 +91,11 @@ function Home() {
             </div>
 
             <div className="border-l border-charcoal-foreground/15 pl-6">
-              <span className="font-display text-4xl leading-none font-bold text-primary lg:text-5xl">
-                Build Pukka.
+              <span className="font-display text-2xl leading-tight font-bold text-primary lg:text-3xl">
+                One point of contact.
               </span>
               <p className="mt-4 max-w-xs text-sm leading-relaxed text-charcoal-foreground/60">
-                Materials, procurement and building-services sourcing through one point of contact.
+                Materials, procurement and building-services sourcing under one roof.
               </p>
             </div>
           </div>

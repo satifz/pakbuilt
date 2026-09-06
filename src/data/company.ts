@@ -1,7 +1,6 @@
 export const company = {
   name: "PakBuilt",
   wordmark: "PAKBUILT",
-  tagline: "Build Pukka.",
   founder: { name: "Atif Zaidi", role: "Founder & CEO" },
   phone: "+92 300 2843259",
   phoneHref: "tel:+923002843259",
