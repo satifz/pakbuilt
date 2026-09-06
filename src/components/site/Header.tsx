@@ -32,8 +32,8 @@ export function Header() {
       className={cn(
         "fixed inset-x-0 top-0 z-50 text-foreground transition-[background-color,box-shadow,border-color] duration-500",
         scrolled || open
-          ? "border-b border-foreground/10 bg-white/95 shadow-lift backdrop-blur-md"
-          : "border-b border-foreground/5 bg-white/85 backdrop-blur-sm",
+          ? "border-b border-foreground/10 bg-white shadow-lift"
+          : "border-b border-foreground/5 bg-white",
       )}
     >
       <div
