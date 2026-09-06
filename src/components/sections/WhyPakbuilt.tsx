@@ -39,6 +39,10 @@ export function WhyPakbuilt() {
               <br />
               <span className="text-primary">More getting things done.</span>
             </p>
+            <p className="mt-6 max-w-md text-base leading-relaxed text-charcoal-foreground/70">
+              From sourcing and project requirements to facility operations, PakBuilt gives clients
+              one practical point of contact — building solutions and facilities management.
+            </p>
 
             <div className="mt-10 hidden overflow-hidden rounded-2xl border border-charcoal-foreground/10 lg:block">
               {images.map((src, i) => (
