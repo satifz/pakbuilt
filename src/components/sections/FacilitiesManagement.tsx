@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Reveal } from "@/components/site/Reveal";
 import { fmServices } from "@/data/fm";
 import { cn } from "@/lib/utils";
@@ -11,6 +11,8 @@ import { cn } from "@/lib/utils";
  */
 export function FacilitiesManagement() {
   const [active, setActive] = useState<number | null>(null);
+  /** True while the last interaction came from touch, so focus doesn't fight the tap. */
+  const touchRef = useRef(false);
 
   return (
     <section
@@ -49,14 +51,21 @@ export function FacilitiesManagement() {
                 <button
                   type="button"
                   aria-expanded={isActive}
+                  onPointerDown={(e) => {
+                    touchRef.current = e.pointerType !== "mouse";
+                  }}
                   onPointerEnter={(e) => {
                     if (e.pointerType === "mouse") setActive(i);
                   }}
                   onPointerLeave={(e) => {
                     if (e.pointerType === "mouse") setActive(null);
                   }}
-                  onFocus={() => setActive(i)}
-                  onBlur={() => setActive(null)}
+                  onFocus={() => {
+                    if (!touchRef.current) setActive(i);
+                  }}
+                  onBlur={() => {
+                    if (!touchRef.current) setActive(null);
+                  }}
                   onClick={() => setActive(isActive ? null : i)}
                   className={cn(
                     "group relative block h-full w-full overflow-hidden rounded-xl border border-charcoal-foreground/12 text-left transition-[border-color,opacity,box-shadow] duration-500 ease-out focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal focus-visible:outline-none",
