@@ -115,23 +115,33 @@ function ProductsPage() {
           ) : null}
         </div>
 
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <p className="mt-8 text-xs font-bold tracking-[0.14em] text-muted-foreground uppercase" aria-live="polite">
+          {visibleCategories.length} {visibleCategories.length === 1 ? "category" : "categories"}
+          {visibleProducts.length > 0 ? ` · ${visibleProducts.length} sample listings` : ""}
+        </p>
+
+        <div
+          key={`${active ?? "all"}-${query}`}
+          className="mt-4 grid animate-fade-in gap-5 sm:grid-cols-2 lg:grid-cols-3"
+        >
           {visibleCategories.map((c, i) => (
             <Reveal key={c.slug} delay={i * 40}>
-              <div className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift">
+              <div className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:border-primary/40 hover:shadow-lift">
                 <div className="aspect-[4/3] overflow-hidden">
                   <img
                     src={c.image}
                     alt={`${c.name} available through PakBuilt`}
                     loading="lazy"
-                    className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
                   />
                 </div>
                 <div className="flex flex-1 flex-col p-5">
                   <span className="font-display text-[0.65rem] font-bold tracking-[0.16em] text-primary uppercase">
                     {c.group}
                   </span>
-                  <h2 className="font-display mt-2 text-lg font-bold">{c.name}</h2>
+                  <h2 className="font-display mt-2 text-lg font-bold transition-transform duration-300 ease-out group-hover:translate-x-0.5">
+                    {c.name}
+                  </h2>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{c.blurb}</p>
                   <ul className="mt-3 flex flex-wrap gap-1.5">
                     {c.subcategories.map((s) => (
@@ -200,7 +210,7 @@ function FilterChip({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "font-display rounded-full border px-3.5 py-1.5 text-xs font-bold tracking-wide uppercase transition-colors",
+        "font-display rounded-full border px-3.5 py-2 text-xs font-bold tracking-wide uppercase transition-[color,background-color,border-color] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none",
         active
           ? "border-primary bg-primary text-primary-foreground"
           : "border-border bg-card text-foreground/70 hover:border-primary hover:text-primary",
