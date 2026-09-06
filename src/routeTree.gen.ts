@@ -23,7 +23,6 @@ import { Route as MepRouteImport } from './routes/mep'
 import { Route as ProcurementRouteImport } from './routes/procurement'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as ProjectsRouteImport } from './routes/projects'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SoftServicesRouteImport } from './routes/soft-services'
 import { Route as SolutionsRouteImport } from './routes/solutions'
 import { Route as WhyPakbuiltRouteImport } from './routes/why-pakbuilt'
@@ -98,11 +97,6 @@ const ProjectsRoute = ProjectsRouteImport.update({
   path: '/projects',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SoftServicesRoute = SoftServicesRouteImport.update({
   id: '/soft-services',
   path: '/soft-services',
@@ -134,7 +128,6 @@ export interface FileRoutesByFullPath {
   '/procurement': typeof ProcurementRoute
   '/products': typeof ProductsRoute
   '/projects': typeof ProjectsRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/soft-services': typeof SoftServicesRoute
   '/solutions': typeof SolutionsRoute
   '/why-pakbuilt': typeof WhyPakbuiltRoute
@@ -154,7 +147,6 @@ export interface FileRoutesByTo {
   '/procurement': typeof ProcurementRoute
   '/products': typeof ProductsRoute
   '/projects': typeof ProjectsRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/soft-services': typeof SoftServicesRoute
   '/solutions': typeof SolutionsRoute
   '/why-pakbuilt': typeof WhyPakbuiltRoute
@@ -175,7 +167,6 @@ export interface FileRoutesById {
   '/procurement': typeof ProcurementRoute
   '/products': typeof ProductsRoute
   '/projects': typeof ProjectsRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/soft-services': typeof SoftServicesRoute
   '/solutions': typeof SolutionsRoute
   '/why-pakbuilt': typeof WhyPakbuiltRoute
@@ -197,7 +188,6 @@ export interface FileRouteTypes {
     | '/procurement'
     | '/products'
     | '/projects'
-    | '/sitemap.xml'
     | '/soft-services'
     | '/solutions'
     | '/why-pakbuilt'
@@ -217,7 +207,6 @@ export interface FileRouteTypes {
     | '/procurement'
     | '/products'
     | '/projects'
-    | '/sitemap.xml'
     | '/soft-services'
     | '/solutions'
     | '/why-pakbuilt'
@@ -237,7 +226,6 @@ export interface FileRouteTypes {
     | '/procurement'
     | '/products'
     | '/projects'
-    | '/sitemap.xml'
     | '/soft-services'
     | '/solutions'
     | '/why-pakbuilt'
@@ -258,7 +246,6 @@ export interface RootRouteChildren {
   ProcurementRoute: typeof ProcurementRoute
   ProductsRoute: typeof ProductsRoute
   ProjectsRoute: typeof ProjectsRoute
-  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SoftServicesRoute: typeof SoftServicesRoute
   SolutionsRoute: typeof SolutionsRoute
   WhyPakbuiltRoute: typeof WhyPakbuiltRoute
@@ -364,13 +351,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/soft-services': {
       id: '/soft-services'
       path: '/soft-services'
@@ -410,7 +390,6 @@ const rootRouteChildren: RootRouteChildren = {
   ProcurementRoute: ProcurementRoute,
   ProductsRoute: ProductsRoute,
   ProjectsRoute: ProjectsRoute,
-  SitemapDotxmlRoute: SitemapDotxmlRoute,
   SoftServicesRoute: SoftServicesRoute,
   SolutionsRoute: SolutionsRoute,
   WhyPakbuiltRoute: WhyPakbuiltRoute,
