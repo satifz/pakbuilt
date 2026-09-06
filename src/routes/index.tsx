@@ -119,43 +119,6 @@ function Home() {
       <BuildingSelector />
 
 
-      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-        <div className="grid items-center gap-12 lg:grid-cols-2">
-          <Reveal>
-            <img
-              src={aboutImage}
-              alt="Stacked building materials in a supply yard"
-              loading="lazy"
-              className="w-full rounded-xl object-cover shadow-lift"
-            />
-          </Reveal>
-          <div>
-            <SectionHeading
-              eyebrow="About PakBuilt"
-              title="Construction supply, without the usual hassle."
-            />
-            <Reveal delay={80}>
-              <p className="mt-5 text-base leading-relaxed text-muted-foreground">
-                PakBuilt is a construction materials and solutions company built around a simple
-                idea: getting the right materials should be easier.
-              </p>
-              <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-                We help contractors, builders, businesses and property owners source construction
-                products, fit-out materials, HVAC solutions and other project requirements through a
-                more professional and responsive procurement experience.
-              </p>
-              <Link
-                to="/about"
-                className="font-display mt-7 inline-flex items-center gap-2 text-sm font-bold tracking-[0.14em] text-primary uppercase hover:gap-3"
-              >
-                More About PakBuilt
-                <ArrowRight className="size-4" />
-              </Link>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
       <BrandMessage />
 
 
