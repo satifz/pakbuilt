@@ -95,7 +95,7 @@ function Home() {
                 One point of contact.
               </span>
               <p className="mt-4 max-w-xs text-sm leading-relaxed text-charcoal-foreground/60">
-                Materials, procurement and building-services sourcing through one point of contact.
+                Materials, procurement and building-services sourcing under one roof.
               </p>
             </div>
           </div>
