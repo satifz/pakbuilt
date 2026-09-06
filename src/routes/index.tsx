@@ -91,7 +91,10 @@ function Home() {
             </div>
 
             <div className="border-l border-charcoal-foreground/15 pl-6">
-              <p className="max-w-xs text-sm leading-relaxed text-charcoal-foreground/60">
+              <span className="font-display text-2xl leading-tight font-bold text-primary lg:text-3xl">
+                One point of contact.
+              </span>
+              <p className="mt-4 max-w-xs text-sm leading-relaxed text-charcoal-foreground/60">
                 Materials, procurement and building-services sourcing through one point of contact.
               </p>
             </div>
