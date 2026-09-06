@@ -157,6 +157,7 @@ function Home() {
       <FacilitiesManagement />
       <BuildingSelector />
       <WhyPakbuilt />
+      <ExperienceLogos />
       <BrandMessage />
     </>
   );
