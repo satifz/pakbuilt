@@ -1,9 +1,15 @@
 import catConstruction from "@/assets/cat-construction.jpg";
+import catElectrical from "@/assets/cat-electrical.jpg";
 import catFinishes from "@/assets/cat-finishes.jpg";
 import catFitout from "@/assets/cat-fitout.jpg";
+import catFitoutMaterials from "@/assets/cat-fitout-materials.jpg";
 import catFlooring from "@/assets/cat-flooring.jpg";
+import catHardware from "@/assets/cat-hardware.jpg";
 import catHvac from "@/assets/cat-hvac.jpg";
 import catMep from "@/assets/cat-mep.jpg";
+import catPaints from "@/assets/cat-paints.jpg";
+import catPlumbing from "@/assets/cat-plumbing.jpg";
+import catWaterproofing from "@/assets/cat-waterproofing.jpg";
 
 /**
  * Catalogue data layer.
@@ -73,7 +79,7 @@ export const categories: Category[] = [
     name: "Hardware & Tools",
     group: "Materials",
     blurb: "Fixings, ironmongery, power tools and site consumables.",
-    image: catConstruction,
+    image: catHardware,
     subcategories: ["Fixings & Anchors", "Ironmongery", "Power Tools", "Consumables"],
   },
   {
@@ -81,7 +87,7 @@ export const categories: Category[] = [
     name: "Plumbing",
     group: "Building Services",
     blurb: "Pipes, fittings, valves, pumps and sanitary requirements.",
-    image: catMep,
+    image: catPlumbing,
     subcategories: ["PPR & UPVC", "Valves", "Pumps", "Sanitaryware"],
   },
   {
@@ -89,7 +95,7 @@ export const categories: Category[] = [
     name: "Electrical",
     group: "Building Services",
     blurb: "Cables, conduits, distribution, switchgear and lighting.",
-    image: catMep,
+    image: catElectrical,
     subcategories: ["Cables", "Conduit & Trunking", "Distribution Boards", "Lighting"],
   },
   {
@@ -113,7 +119,7 @@ export const categories: Category[] = [
     name: "Waterproofing & Sealants",
     group: "Finishes",
     blurb: "Membranes, coatings, sealants, tapes and admixtures.",
-    image: catFinishes,
+    image: catWaterproofing,
     subcategories: ["Membranes", "Liquid Coatings", "Sealants", "Admixtures"],
   },
   {
@@ -121,7 +127,7 @@ export const categories: Category[] = [
     name: "Paints & Coatings",
     group: "Finishes",
     blurb: "Interior, exterior, protective and specialist coatings.",
-    image: catFinishes,
+    image: catPaints,
     subcategories: ["Emulsions", "Enamels", "Primers", "Protective Coatings"],
   },
   {
@@ -129,7 +135,7 @@ export const categories: Category[] = [
     name: "Fit-Out Materials",
     group: "Fit-Out",
     blurb: "Joinery boards, laminates, cladding and interior systems.",
-    image: catFitout,
+    image: catFitoutMaterials,
     subcategories: ["Laminates & MDF", "Wall Cladding", "Doors", "Interior Systems"],
   },
 ];
@@ -215,7 +221,7 @@ export const products: Product[] = [
     spec: "Hot and cold water systems, full fitting range",
     brand: "Brand to be confirmed",
     availability: "Available to order",
-    image: catMep,
+    image: catPlumbing,
   },
   {
     slug: "sample-power-cable",
@@ -224,7 +230,7 @@ export const products: Product[] = [
     spec: "Single core and multicore, sizes as per load schedule",
     brand: "Brand to be confirmed",
     availability: "Available to order",
-    image: catMep,
+    image: catElectrical,
   },
   {
     slug: "sample-waterproof-membrane",
@@ -233,7 +239,7 @@ export const products: Product[] = [
     spec: "Liquid applied and sheet systems for roofs and wet areas",
     brand: "Brand to be confirmed",
     availability: "Sourced on request",
-    image: catFinishes,
+    image: catWaterproofing,
   },
   {
     slug: "sample-emulsion-paint",
@@ -242,7 +248,7 @@ export const products: Product[] = [
     spec: "Matt and silk finishes, tinted to selected shades",
     brand: "Brand to be confirmed",
     availability: "Available to order",
-    image: catFinishes,
+    image: catPaints,
   },
 ];
 
