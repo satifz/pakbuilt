@@ -79,7 +79,7 @@ export const categories: Category[] = [
     name: "Hardware & Tools",
     group: "Materials",
     blurb: "Fixings, ironmongery, power tools and site consumables.",
-    image: catConstruction,
+    image: catHardware,
     subcategories: ["Fixings & Anchors", "Ironmongery", "Power Tools", "Consumables"],
   },
   {
@@ -87,7 +87,7 @@ export const categories: Category[] = [
     name: "Plumbing",
     group: "Building Services",
     blurb: "Pipes, fittings, valves, pumps and sanitary requirements.",
-    image: catMep,
+    image: catPlumbing,
     subcategories: ["PPR & UPVC", "Valves", "Pumps", "Sanitaryware"],
   },
   {
@@ -95,7 +95,7 @@ export const categories: Category[] = [
     name: "Electrical",
     group: "Building Services",
     blurb: "Cables, conduits, distribution, switchgear and lighting.",
-    image: catMep,
+    image: catElectrical,
     subcategories: ["Cables", "Conduit & Trunking", "Distribution Boards", "Lighting"],
   },
   {
@@ -119,7 +119,7 @@ export const categories: Category[] = [
     name: "Waterproofing & Sealants",
     group: "Finishes",
     blurb: "Membranes, coatings, sealants, tapes and admixtures.",
-    image: catFinishes,
+    image: catWaterproofing,
     subcategories: ["Membranes", "Liquid Coatings", "Sealants", "Admixtures"],
   },
   {
@@ -127,7 +127,7 @@ export const categories: Category[] = [
     name: "Paints & Coatings",
     group: "Finishes",
     blurb: "Interior, exterior, protective and specialist coatings.",
-    image: catFinishes,
+    image: catPaints,
     subcategories: ["Emulsions", "Enamels", "Primers", "Protective Coatings"],
   },
   {
@@ -135,7 +135,7 @@ export const categories: Category[] = [
     name: "Fit-Out Materials",
     group: "Fit-Out",
     blurb: "Joinery boards, laminates, cladding and interior systems.",
-    image: catFitout,
+    image: catFitoutMaterials,
     subcategories: ["Laminates & MDF", "Wall Cladding", "Doors", "Interior Systems"],
   },
 ];
