@@ -1,9 +1,15 @@
 import catConstruction from "@/assets/cat-construction.jpg";
+import catElectrical from "@/assets/cat-electrical.jpg";
 import catFinishes from "@/assets/cat-finishes.jpg";
 import catFitout from "@/assets/cat-fitout.jpg";
+import catFitoutMaterials from "@/assets/cat-fitout-materials.jpg";
 import catFlooring from "@/assets/cat-flooring.jpg";
+import catHardware from "@/assets/cat-hardware.jpg";
 import catHvac from "@/assets/cat-hvac.jpg";
 import catMep from "@/assets/cat-mep.jpg";
+import catPaints from "@/assets/cat-paints.jpg";
+import catPlumbing from "@/assets/cat-plumbing.jpg";
+import catWaterproofing from "@/assets/cat-waterproofing.jpg";
 
 /**
  * Catalogue data layer.
