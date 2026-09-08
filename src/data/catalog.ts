@@ -221,7 +221,7 @@ export const products: Product[] = [
     spec: "Hot and cold water systems, full fitting range",
     brand: "Brand to be confirmed",
     availability: "Available to order",
-    image: catMep,
+    image: catPlumbing,
   },
   {
     slug: "sample-power-cable",
@@ -230,7 +230,7 @@ export const products: Product[] = [
     spec: "Single core and multicore, sizes as per load schedule",
     brand: "Brand to be confirmed",
     availability: "Available to order",
-    image: catMep,
+    image: catElectrical,
   },
   {
     slug: "sample-waterproof-membrane",
@@ -239,7 +239,7 @@ export const products: Product[] = [
     spec: "Liquid applied and sheet systems for roofs and wet areas",
     brand: "Brand to be confirmed",
     availability: "Sourced on request",
-    image: catFinishes,
+    image: catWaterproofing,
   },
   {
     slug: "sample-emulsion-paint",
@@ -248,7 +248,7 @@ export const products: Product[] = [
     spec: "Matt and silk finishes, tinted to selected shades",
     brand: "Brand to be confirmed",
     availability: "Available to order",
-    image: catFinishes,
+    image: catPaints,
   },
 ];
 
