@@ -91,6 +91,20 @@ export const fmServices: readonly FmService[] = [
       "Preventive maintenance",
       "Corrective maintenance",
     ],
+    extendedScope: {
+      left: [
+        "Fire & life safety systems",
+        "Standby power — generators & UPS",
+        "Civil & structural repairs",
+        "Water supply & drainage systems",
+      ],
+      right: [
+        "CCTV & security systems maintenance",
+        "Elevators & escalators maintenance",
+        "Waterproofing & façade maintenance",
+        "Painting & finishing touch-ups",
+      ],
+    },
     cta: "Explore Hard Services",
     image: fmHardImage,
     alt: "Building plant room with chillers, pumps and electrical panels",
