@@ -251,7 +251,12 @@ const contactItems = [
     external: true,
   },
   { label: "Call", value: company.phone, href: company.phoneHref, icon: Phone },
-  { label: "Email", value: company.email, href: `mailto:${company.email}`, icon: Mail },
+  {
+    label: "Email",
+    value: `${company.email} · ${company.emailAlt}`,
+    href: `mailto:${company.email},${company.emailAlt}`,
+    icon: Mail,
+  },
   { label: "Location", value: company.locationShort, icon: MapPin },
 ];
 
