@@ -32,6 +32,11 @@ export interface FmService {
   tagline: string;
   body: string;
   items: readonly string[];
+  /** Optional second scope list shown under the main one on the FM page. */
+  extendedScope?: {
+    left: readonly string[];
+    right: readonly string[];
+  };
   cta: string;
   image: string;
   alt: string;
@@ -53,6 +58,20 @@ export const fmServices: readonly FmService[] = [
       "CAFM / CMMS advisory",
       "Performance review & optimisation",
     ],
+    extendedScope: {
+      left: [
+        "HSE & statutory compliance audits",
+        "Energy audits & sustainability recommendations",
+        "Vendor & contractor management framework",
+        "FM policy & procedure manual development",
+      ],
+      right: [
+        "Risk assessment & business continuity planning",
+        "Asset lifecycle costing & capital planning",
+        "Service transition & handover management",
+        "Helpdesk / CAFM workflow design",
+      ],
+    },
     cta: "Explore FM Consultancy",
     image: fmConsultancyImage,
     alt: "Facility drawings, maintenance schedules and a facilities management dashboard on a desk",
