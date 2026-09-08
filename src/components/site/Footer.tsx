@@ -28,19 +28,32 @@ export function Footer() {
               </p>
               <div className="mt-6 flex gap-2">
                 {[
-                  { Icon: Linkedin, label: "LinkedIn" },
-                  { Icon: Facebook, label: "Facebook" },
-                  { Icon: Instagram, label: "Instagram" },
-                ].map(({ Icon, label }) => (
-                  <span
-                    key={label}
-                    title={`${label} — coming soon`}
-                    aria-label={`${label} profile coming soon`}
-                    className="grid size-9 place-items-center rounded-md border border-charcoal-foreground/15 text-charcoal-foreground/50 transition-colors hover:border-primary hover:text-primary"
-                  >
-                    <Icon className="size-4" />
-                  </span>
-                ))}
+                  { Icon: Linkedin, label: "LinkedIn", href: undefined },
+                  { Icon: Facebook, label: "Facebook", href: undefined },
+                  { Icon: Instagram, label: "Instagram", href: "https://www.instagram.com/pakbuilt/" },
+                ].map(({ Icon, label, href }) =>
+                  href ? (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${label} profile`}
+                      className="grid size-9 place-items-center rounded-md border border-charcoal-foreground/15 text-charcoal-foreground/50 transition-colors hover:border-primary hover:text-primary"
+                    >
+                      <Icon className="size-4" />
+                    </a>
+                  ) : (
+                    <span
+                      key={label}
+                      title={`${label} — coming soon`}
+                      aria-label={`${label} profile coming soon`}
+                      className="grid size-9 place-items-center rounded-md border border-charcoal-foreground/15 text-charcoal-foreground/50 transition-colors hover:border-primary hover:text-primary"
+                    >
+                      <Icon className="size-4" />
+                    </span>
+                  ),
+                )}
               </div>
             </div>
 
