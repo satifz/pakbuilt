@@ -3,13 +3,11 @@ import { Search, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { z } from "zod";
 import { BoqBanner } from "@/components/sections/Blocks";
-import { ProductCard } from "@/components/sections/FeaturedProducts";
 import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
-import { SectionHeading } from "@/components/site/SectionHeading";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { categories, products } from "@/data/catalog";
+import { categories } from "@/data/catalog";
 import { cn } from "@/lib/utils";
 
 const title = "Products | Building Materials & Construction Supplies Karachi";
@@ -53,15 +51,6 @@ function ProductsPage() {
         c.blurb.toLowerCase().includes(q) ||
         c.subcategories.some((s) => s.toLowerCase().includes(q))
       );
-    });
-  }, [active, query]);
-
-  const visibleProducts = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return products.filter((p) => {
-      if (active && p.categorySlug !== active) return false;
-      if (!q) return true;
-      return p.name.toLowerCase().includes(q) || p.spec.toLowerCase().includes(q);
     });
   }, [active, query]);
 
@@ -117,7 +106,6 @@ function ProductsPage() {
 
         <p className="mt-8 text-xs font-bold tracking-[0.14em] text-muted-foreground uppercase" aria-live="polite">
           {visibleCategories.length} {visibleCategories.length === 1 ? "category" : "categories"}
-          {visibleProducts.length > 0 ? ` · ${visibleProducts.length} sample listings` : ""}
         </p>
 
         <div
@@ -167,26 +155,11 @@ function ProductsPage() {
           ))}
         </div>
 
-        {visibleCategories.length === 0 && visibleProducts.length === 0 ? (
+        {visibleCategories.length === 0 ? (
           <p className="mt-10 rounded-xl border border-dashed border-border p-10 text-center text-sm text-muted-foreground">
             Nothing matched that search. If it is construction, fit-out or building-services related,
             send us the requirement anyway — the categories are a starting point, not a limit.
           </p>
-        ) : null}
-
-        {visibleProducts.length > 0 ? (
-          <div className="mt-20">
-            <SectionHeading
-              eyebrow="Sample listings"
-              title="Example products in this selection"
-              subtitle="Demonstration entries only — no prices are published. Quotes are issued against your specification and quantity."
-            />
-            <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {visibleProducts.map((p) => (
-                <ProductCard key={p.slug} product={p} />
-              ))}
-            </div>
-          </div>
         ) : null}
       </section>
 
