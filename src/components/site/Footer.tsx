@@ -29,7 +29,7 @@ export function Footer() {
               <div className="mt-6 flex gap-2">
                 {[
                   { Icon: Linkedin, label: "LinkedIn", href: undefined },
-                  { Icon: Facebook, label: "Facebook", href: undefined },
+                  { Icon: Facebook, label: "Facebook", href: "https://www.facebook.com/pakbuiltt" },
                   { Icon: Instagram, label: "Instagram", href: "https://www.instagram.com/pakbuilt/" },
                 ].map(({ Icon, label, href }) =>
                   href ? (
