@@ -229,6 +229,27 @@ function FacilitiesManagementPage() {
                     </li>
                   ))}
                 </ul>
+                {service.extendedScope ? (
+                  <div className="mt-8">
+                    <span className="eyebrow rule-accent">Extended scope</span>
+                    <div className="mt-4 grid gap-x-8 sm:grid-cols-2">
+                      {[service.extendedScope.left, service.extendedScope.right].map(
+                        (column, columnIndex) => (
+                          <ul key={columnIndex} className="border-t border-border">
+                            {column.map((item) => (
+                              <li
+                                key={item}
+                                className="border-b border-border py-3 text-sm font-medium text-foreground/80"
+                              >
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        ),
+                      )}
+                    </div>
+                  </div>
+                ) : null}
                 <Button asChild variant="cta" size="lg" className="group mt-8">
                   <Link to="/contact">
                     Discuss {service.title}
