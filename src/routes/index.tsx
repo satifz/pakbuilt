@@ -37,7 +37,7 @@ export const Route = createFileRoute("/")({
           "@type": "LocalBusiness",
           name: "PakBuilt",
           description,
-          telephone: "+92 300 2843259",
+          telephone: "+92 308 110 7711",
           email: "info@pakbuilt.com",
           address: {
             "@type": "PostalAddress",

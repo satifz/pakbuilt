@@ -117,7 +117,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           logo: "https://www.pakbuilt.com/pakbuilt-logo.png",
           description:
             "Building solutions and facilities management: building materials, procurement, fit-out, HVAC, MEP and facilities management services in Karachi and across Pakistan.",
-          telephone: "+92 300 2843259",
+          telephone: "+92 308 110 7711",
           email: "info@pakbuilt.com",
           address: {
             "@type": "PostalAddress",

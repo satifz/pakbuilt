@@ -84,7 +84,7 @@ export function serviceLd({
       "@type": "Organization",
       name: "PakBuilt",
       url: SITE_URL,
-      telephone: "+92 300 2843259",
+      telephone: "+92 308 110 7711",
       email: "info@pakbuilt.com",
     },
   };
