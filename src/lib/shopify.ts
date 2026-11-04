@@ -357,7 +357,8 @@ export async function addLineToShopifyCart(
     (l: { node: { id: string; merchandise: { id: string } } }) =>
       l.node.merchandise.id === item.variantId,
   );
-  return { success: true, lineId: newLine?.node?.id };
+  const lineId = newLine?.node?.id;
+  return lineId ? { success: true, lineId } : { success: true };
 }
 
 export async function updateShopifyCartLine(
