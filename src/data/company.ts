@@ -28,6 +28,7 @@ export const navLinks = [
   { label: "Home", to: "/" },
   { label: "About", to: "/about" },
   { label: "Products", to: "/products" },
+  { label: "Shop", to: "/shop" },
   { label: "Solutions", to: "/solutions" },
   { label: "Facilities Management", to: "/facilities-management" },
   { label: "Industries", to: "/industries" },

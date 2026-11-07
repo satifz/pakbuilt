@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Menu, Phone, X } from "lucide-react";
+import { ArrowRight, Menu, Phone, ShoppingCart, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/site/Logo";
+import { useCartCount } from "@/lib/cart-store";
 import { company, navLinks } from "@/data/company";
 import { cn } from "@/lib/utils";
 
@@ -12,6 +13,7 @@ import { cn } from "@/lib/utils";
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const cartCount = useCartCount();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -63,6 +65,17 @@ export function Header() {
               </Link>
             ))}
           </nav>
+
+          <Button asChild variant="onLight" size="icon" className="relative hidden sm:inline-flex">
+            <Link to="/cart" aria-label="Shopping cart">
+              <ShoppingCart />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 grid size-4.5 place-items-center rounded-full bg-primary text-[0.6rem] font-bold text-primary-foreground">
+                  {cartCount > 99 ? "99+" : cartCount}
+                </span>
+              )}
+            </Link>
+          </Button>
 
           <Button asChild variant="onLight" size="icon" className="hidden sm:inline-flex lg:hidden">
             <a href={company.phoneHref} aria-label={`Call ${company.phone}`}>
