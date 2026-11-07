@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as BuildingMaterialsRouteImport } from './routes/building-materials'
+import { Route as CartRouteImport } from './routes/cart'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as FacilitiesManagementRouteImport } from './routes/facilities-management'
 import { Route as FitOutRouteImport } from './routes/fit-out'
@@ -23,9 +24,12 @@ import { Route as MepRouteImport } from './routes/mep'
 import { Route as ProcurementRouteImport } from './routes/procurement'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as ShopRouteImport } from './routes/shop'
 import { Route as SoftServicesRouteImport } from './routes/soft-services'
 import { Route as SolutionsRouteImport } from './routes/solutions'
 import { Route as WhyPakbuiltRouteImport } from './routes/why-pakbuilt'
+import { Route as ShopIndexRouteImport } from './routes/shop.index'
+import { Route as ShopProductIdRouteImport } from './routes/shop.$productId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,6 +44,11 @@ const AboutRoute = AboutRouteImport.update({
 const BuildingMaterialsRoute = BuildingMaterialsRouteImport.update({
   id: '/building-materials',
   path: '/building-materials',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CartRoute = CartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -97,6 +106,11 @@ const ProjectsRoute = ProjectsRouteImport.update({
   path: '/projects',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShopRoute = ShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SoftServicesRoute = SoftServicesRouteImport.update({
   id: '/soft-services',
   path: '/soft-services',
@@ -112,11 +126,22 @@ const WhyPakbuiltRoute = WhyPakbuiltRouteImport.update({
   path: '/why-pakbuilt',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShopIndexRoute = ShopIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ShopRoute,
+} as any)
+const ShopProductIdRoute = ShopProductIdRouteImport.update({
+  id: '/$productId',
+  path: '/$productId',
+  getParentRoute: () => ShopRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/building-materials': typeof BuildingMaterialsRoute
+  '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
   '/facilities-management': typeof FacilitiesManagementRoute
   '/fit-out': typeof FitOutRoute
@@ -128,14 +153,18 @@ export interface FileRoutesByFullPath {
   '/procurement': typeof ProcurementRoute
   '/products': typeof ProductsRoute
   '/projects': typeof ProjectsRoute
+  '/shop': typeof ShopRouteWithChildren
   '/soft-services': typeof SoftServicesRoute
   '/solutions': typeof SolutionsRoute
   '/why-pakbuilt': typeof WhyPakbuiltRoute
+  '/shop/$productId': typeof ShopProductIdRoute
+  '/shop/': typeof ShopIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/building-materials': typeof BuildingMaterialsRoute
+  '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
   '/facilities-management': typeof FacilitiesManagementRoute
   '/fit-out': typeof FitOutRoute
@@ -150,12 +179,15 @@ export interface FileRoutesByTo {
   '/soft-services': typeof SoftServicesRoute
   '/solutions': typeof SolutionsRoute
   '/why-pakbuilt': typeof WhyPakbuiltRoute
+  '/shop/$productId': typeof ShopProductIdRoute
+  '/shop': typeof ShopIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/building-materials': typeof BuildingMaterialsRoute
+  '/cart': typeof CartRoute
   '/contact': typeof ContactRoute
   '/facilities-management': typeof FacilitiesManagementRoute
   '/fit-out': typeof FitOutRoute
@@ -167,9 +199,12 @@ export interface FileRoutesById {
   '/procurement': typeof ProcurementRoute
   '/products': typeof ProductsRoute
   '/projects': typeof ProjectsRoute
+  '/shop': typeof ShopRouteWithChildren
   '/soft-services': typeof SoftServicesRoute
   '/solutions': typeof SolutionsRoute
   '/why-pakbuilt': typeof WhyPakbuiltRoute
+  '/shop/$productId': typeof ShopProductIdRoute
+  '/shop/': typeof ShopIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -177,6 +212,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/building-materials'
+    | '/cart'
     | '/contact'
     | '/facilities-management'
     | '/fit-out'
@@ -188,14 +224,18 @@ export interface FileRouteTypes {
     | '/procurement'
     | '/products'
     | '/projects'
+    | '/shop'
     | '/soft-services'
     | '/solutions'
     | '/why-pakbuilt'
+    | '/shop/$productId'
+    | '/shop/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/building-materials'
+    | '/cart'
     | '/contact'
     | '/facilities-management'
     | '/fit-out'
@@ -210,11 +250,14 @@ export interface FileRouteTypes {
     | '/soft-services'
     | '/solutions'
     | '/why-pakbuilt'
+    | '/shop/$productId'
+    | '/shop'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/building-materials'
+    | '/cart'
     | '/contact'
     | '/facilities-management'
     | '/fit-out'
@@ -226,15 +269,19 @@ export interface FileRouteTypes {
     | '/procurement'
     | '/products'
     | '/projects'
+    | '/shop'
     | '/soft-services'
     | '/solutions'
     | '/why-pakbuilt'
+    | '/shop/$productId'
+    | '/shop/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   BuildingMaterialsRoute: typeof BuildingMaterialsRoute
+  CartRoute: typeof CartRoute
   ContactRoute: typeof ContactRoute
   FacilitiesManagementRoute: typeof FacilitiesManagementRoute
   FitOutRoute: typeof FitOutRoute
@@ -246,6 +293,7 @@ export interface RootRouteChildren {
   ProcurementRoute: typeof ProcurementRoute
   ProductsRoute: typeof ProductsRoute
   ProjectsRoute: typeof ProjectsRoute
+  ShopRoute: typeof ShopRouteWithChildren
   SoftServicesRoute: typeof SoftServicesRoute
   SolutionsRoute: typeof SolutionsRoute
   WhyPakbuiltRoute: typeof WhyPakbuiltRoute
@@ -272,6 +320,13 @@ declare module '@tanstack/react-router' {
       path: '/building-materials'
       fullPath: '/building-materials'
       preLoaderRoute: typeof BuildingMaterialsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cart': {
+      id: '/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -351,6 +406,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/shop': {
+      id: '/shop'
+      path: '/shop'
+      fullPath: '/shop'
+      preLoaderRoute: typeof ShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/soft-services': {
       id: '/soft-services'
       path: '/soft-services'
@@ -372,13 +434,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WhyPakbuiltRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/shop/': {
+      id: '/shop/'
+      path: '/'
+      fullPath: '/shop/'
+      preLoaderRoute: typeof ShopIndexRouteImport
+      parentRoute: typeof ShopRoute
+    }
+    '/shop/$productId': {
+      id: '/shop/$productId'
+      path: '/$productId'
+      fullPath: '/shop/$productId'
+      preLoaderRoute: typeof ShopProductIdRouteImport
+      parentRoute: typeof ShopRoute
+    }
   }
 }
+
+interface ShopRouteChildren {
+  ShopProductIdRoute: typeof ShopProductIdRoute
+  ShopIndexRoute: typeof ShopIndexRoute
+}
+
+const ShopRouteChildren: ShopRouteChildren = {
+  ShopProductIdRoute: ShopProductIdRoute,
+  ShopIndexRoute: ShopIndexRoute,
+}
+
+const ShopRouteWithChildren = ShopRoute._addFileChildren(ShopRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   BuildingMaterialsRoute: BuildingMaterialsRoute,
+  CartRoute: CartRoute,
   ContactRoute: ContactRoute,
   FacilitiesManagementRoute: FacilitiesManagementRoute,
   FitOutRoute: FitOutRoute,
@@ -390,6 +479,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProcurementRoute: ProcurementRoute,
   ProductsRoute: ProductsRoute,
   ProjectsRoute: ProjectsRoute,
+  ShopRoute: ShopRouteWithChildren,
   SoftServicesRoute: SoftServicesRoute,
   SolutionsRoute: SolutionsRoute,
   WhyPakbuiltRoute: WhyPakbuiltRoute,
