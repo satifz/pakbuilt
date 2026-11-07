@@ -4,16 +4,16 @@ import { useState } from "react";
 import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
 import { Button } from "@/components/ui/button";
-import { addToCart } from "@/lib/cart-store";
+import { useCartStore } from "@/stores/cartStore";
+import { formatMoney } from "@/lib/shopify";
+import { toCartItem, useShopifyCatalog, type ShopifyMatch } from "@/hooks/useShopifyCatalog";
 import { shopCategories, shopProducts, formatPrice } from "@/data/shop";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/shop/$productId")({
   head: ({ params }) => {
     const product = shopProducts.find((p) => p.id === params.productId);
-    const title = product
-      ? `${product.name} | PakBuilt Shop`
-      : "Product Not Found | PakBuilt";
+    const title = product ? `${product.name} | PakBuilt Shop` : "Product Not Found | PakBuilt";
     return {
       meta: [
         { title },
@@ -28,15 +28,15 @@ export const Route = createFileRoute("/shop/$productId")({
 function ProductDetailPage() {
   const { productId } = Route.useParams();
   const product = shopProducts.find((p) => p.id === productId);
+  const catalog = useShopifyCatalog();
+  const match = product ? catalog.match(product) : null;
 
   if (!product) {
     return (
       <>
         <PageHero eyebrow="Shop" title="Product Not Found" />
         <section className="mx-auto max-w-7xl px-4 py-20 text-center sm:px-6 lg:px-8">
-          <p className="text-muted-foreground">
-            This product doesn't exist or has been removed.
-          </p>
+          <p className="text-muted-foreground">This product doesn't exist or has been removed.</p>
           <Button asChild variant="cta" size="lg" className="mt-6">
             <Link to="/shop">Back to Shop</Link>
           </Button>
@@ -52,11 +52,7 @@ function ProductDetailPage() {
 
   return (
     <>
-      <PageHero
-        eyebrow="Shop"
-        title={product.name}
-        subtitle={product.spec}
-      />
+      <PageHero eyebrow="Shop" title={product.name} subtitle={product.spec} />
 
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         {/* Back link */}
@@ -92,17 +88,13 @@ function ProductDetailPage() {
               <span className="font-display text-[0.65rem] font-bold tracking-[0.16em] text-primary uppercase">
                 {product.brand}
               </span>
-              <h1 className="font-display mt-2 text-3xl font-bold sm:text-4xl">
-                {product.name}
-              </h1>
-              <p className="mt-3 text-base leading-relaxed text-muted-foreground">
-                {product.spec}
-              </p>
+              <h1 className="font-display mt-2 text-3xl font-bold sm:text-4xl">{product.name}</h1>
+              <p className="mt-3 text-base leading-relaxed text-muted-foreground">{product.spec}</p>
 
               {/* Price */}
               <div className="mt-6 flex items-baseline gap-3">
                 <span className="font-display text-3xl font-bold text-foreground">
-                  {formatPrice(product.price)}
+                  {match ? formatMoney(match.variant.price) : formatPrice(product.price)}
                 </span>
                 {product.originalPrice && (
                   <span className="text-lg text-muted-foreground line-through">
@@ -128,7 +120,7 @@ function ProductDetailPage() {
               </ul>
 
               {/* Add to cart */}
-              <AddToCartSection product={product} />
+              <AddToCartSection product={product} match={match} loading={catalog.isLoading} />
 
               {/* Delivery note */}
               <div className="mt-6 flex items-start gap-3 rounded-lg border border-border bg-sand p-4">
@@ -136,7 +128,8 @@ function ProductDetailPage() {
                 <div>
                   <p className="text-sm font-semibold">Delivery Coordinated</p>
                   <p className="mt-0.5 text-xs text-muted-foreground">
-                    Location, access and timing confirmed before dispatch. Bulk orders may qualify for free delivery.
+                    Location, access and timing confirmed before dispatch. Bulk orders may qualify
+                    for free delivery.
                   </p>
                 </div>
               </div>
@@ -171,7 +164,9 @@ function ProductDetailPage() {
                       <h3 className="font-display mt-1 text-sm font-bold leading-snug group-hover:text-primary">
                         {p.name}
                       </h3>
-                      <p className="mt-2 font-display text-base font-bold">{formatPrice(p.price)}</p>
+                      <p className="mt-2 font-display text-base font-bold">
+                        {formatPrice(p.price)}
+                      </p>
                     </div>
                   </Link>
                 </Reveal>
@@ -184,16 +179,41 @@ function ProductDetailPage() {
   );
 }
 
-function AddToCartSection({ product }: { product: (typeof shopProducts)[number] }) {
+function AddToCartSection({
+  product,
+  match,
+  loading,
+}: {
+  product: (typeof shopProducts)[number];
+  match: ShopifyMatch | null;
+  loading: boolean;
+}) {
   const [qty, setQty] = useState(1);
+  const addItem = useCartStore((s) => s.addItem);
+  const cartLoading = useCartStore((s) => s.isLoading);
 
-  function handleAdd() {
-    addToCart(
-      { id: product.id, name: product.name, price: product.price, unit: product.unit, image: product.image },
-      qty,
-    );
+  async function handleAdd() {
+    if (!match) return;
+    await addItem(toCartItem(product, match, qty));
     toast.success(`${qty}× ${product.name} added to cart`);
   }
+
+  if (!match && !loading) {
+    return (
+      <div className="mt-8">
+        <Button asChild variant="cta" size="lg">
+          <Link to="/contact">Request a Quote</Link>
+        </Button>
+        <p className="mt-2 text-xs text-muted-foreground">
+          This item isn't available to order online yet. Send us your requirement and we'll quote
+          you.
+        </p>
+      </div>
+    );
+  }
+
+  const unit = match ? Number.parseFloat(match.variant.price.amount) : 0;
+  const soldOut = match ? !match.variant.availableForSale : false;
 
   return (
     <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -216,9 +236,19 @@ function AddToCartSection({ product }: { product: (typeof shopProducts)[number] 
           <Plus className="size-4" />
         </button>
       </div>
-      <Button variant="cta" size="lg" onClick={handleAdd} className="flex-1 sm:flex-none">
+      <Button
+        variant="cta"
+        size="lg"
+        onClick={handleAdd}
+        disabled={!match || soldOut || cartLoading}
+        className="flex-1 sm:flex-none"
+      >
         <ShoppingCart className="size-4" />
-        Add to Cart — {formatPrice(product.price * qty)}
+        {soldOut
+          ? "Out of stock"
+          : match
+            ? `Add to Cart — ${formatMoney({ amount: String(unit * qty), currencyCode: match.variant.price.currencyCode })}`
+            : "Loading…"}
       </Button>
     </div>
   );

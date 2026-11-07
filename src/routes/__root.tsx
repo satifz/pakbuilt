@@ -15,6 +15,7 @@ import { FloatingActions } from "@/components/site/FloatingActions";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
 import { Toaster } from "@/components/ui/sonner";
+import { useCartSync } from "@/hooks/useCartSync";
 
 function NotFoundComponent() {
   return (
@@ -167,6 +168,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <CartSync />
       <Header />
       <main id="main">
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
@@ -177,4 +179,9 @@ function RootComponent() {
       <Toaster />
     </QueryClientProvider>
   );
+}
+
+function CartSync() {
+  useCartSync();
+  return null;
 }

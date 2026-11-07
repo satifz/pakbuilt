@@ -7,7 +7,9 @@ import { Reveal } from "@/components/site/Reveal";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { addToCart } from "@/lib/cart-store";
+import { useCartStore } from "@/stores/cartStore";
+import { formatMoney } from "@/lib/shopify";
+import { toCartItem, useShopifyCatalog } from "@/hooks/useShopifyCatalog";
 import { shopCategories, shopProducts, formatPrice, type ShopProduct } from "@/data/shop";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -42,6 +44,9 @@ function ShopPage() {
   const navigate = Route.useNavigate();
   const [query, setQuery] = useState(q ?? "");
   const [showFilters, setShowFilters] = useState(false);
+  const addItem = useCartStore((s) => s.addItem);
+  const cartLoading = useCartStore((s) => s.isLoading);
+  const catalog = useShopifyCatalog();
 
   const active = shopCategories.find((c) => c.slug === category)?.slug;
 
@@ -62,8 +67,13 @@ function ShopPage() {
   const setCategory = (slug?: string) =>
     navigate({ search: (prev) => ({ ...prev, category: slug }), resetScroll: false });
 
-  function handleAdd(p: ShopProduct) {
-    addToCart({ id: p.id, name: p.name, price: p.price, unit: p.unit, image: p.image });
+  async function handleAdd(p: ShopProduct) {
+    const m = catalog.match(p);
+    if (!m) {
+      toast.error("This item isn't available to order online yet. Please request a quote.");
+      return;
+    }
+    await addItem(toCartItem(p, m, 1));
     toast.success(`${p.name} added to cart`);
   }
 
@@ -108,10 +118,7 @@ function ShopPage() {
 
           {/* Category chips */}
           <div
-            className={cn(
-              "flex-wrap gap-2",
-              showFilters ? "flex" : "hidden lg:flex",
-            )}
+            className={cn("flex-wrap gap-2", showFilters ? "flex" : "hidden lg:flex")}
             role="group"
             aria-label="Filter by category"
           >
@@ -119,7 +126,11 @@ function ShopPage() {
               All
             </FilterChip>
             {shopCategories.map((c) => (
-              <FilterChip key={c.slug} active={active === c.slug} onClick={() => setCategory(c.slug)}>
+              <FilterChip
+                key={c.slug}
+                active={active === c.slug}
+                onClick={() => setCategory(c.slug)}
+              >
                 {c.name}
               </FilterChip>
             ))}
@@ -153,72 +164,86 @@ function ShopPage() {
           key={`${active ?? "all"}-${query}`}
           className="mt-4 grid animate-fade-in gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         >
-          {filtered.map((p, i) => (
-            <Reveal key={p.id} delay={i * 30}>
-              <div className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:border-primary/40 hover:shadow-lift">
-                {p.badge && (
-                  <span className="absolute top-3 left-3 z-10 rounded-md bg-primary px-2 py-0.5 text-[0.65rem] font-bold text-primary-foreground uppercase">
-                    {p.badge}
-                  </span>
-                )}
+          {filtered.map((p, i) => {
+            const m = catalog.match(p);
+            return (
+              <Reveal key={p.id} delay={i * 30}>
+                <div className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:border-primary/40 hover:shadow-lift">
+                  {p.badge && (
+                    <span className="absolute top-3 left-3 z-10 rounded-md bg-primary px-2 py-0.5 text-[0.65rem] font-bold text-primary-foreground uppercase">
+                      {p.badge}
+                    </span>
+                  )}
 
-                <Link to="/shop/$productId" params={{ productId: p.id }} className="block">
-                  <div className="aspect-[4/3] overflow-hidden bg-sand">
-                    <img
-                      src={p.image}
-                      alt={p.name}
-                      loading="lazy"
-                      className="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
-                    />
-                  </div>
-                </Link>
-
-                <div className="flex flex-1 flex-col p-4">
-                  <span className="font-display text-[0.6rem] font-bold tracking-[0.16em] text-primary uppercase">
-                    {p.brand}
-                  </span>
-                  <Link to="/shop/$productId" params={{ productId: p.id }}>
-                    <h2 className="font-display mt-1 text-sm font-bold leading-snug transition-colors duration-200 group-hover:text-primary">
-                      {p.name}
-                    </h2>
-                  </Link>
-                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground line-clamp-2">
-                    {p.spec}
-                  </p>
-
-                  <div className="mt-auto pt-3">
-                    <div className="flex items-baseline gap-2">
-                      <span className="font-display text-lg font-bold text-foreground">
-                        {formatPrice(p.price)}
-                      </span>
-                      {p.originalPrice && (
-                        <span className="text-xs text-muted-foreground line-through">
-                          {formatPrice(p.originalPrice)}
-                        </span>
-                      )}
-                      <span className="text-[0.65rem] text-muted-foreground">/{p.unit}</span>
+                  <Link to="/shop/$productId" params={{ productId: p.id }} className="block">
+                    <div className="aspect-[4/3] overflow-hidden bg-sand">
+                      <img
+                        src={p.image}
+                        alt={p.name}
+                        loading="lazy"
+                        className="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+                      />
                     </div>
-                    <div className="mt-3 flex gap-2">
-                      <Button
-                        variant="cta"
-                        size="sm"
-                        className="flex-1"
-                        onClick={() => handleAdd(p)}
-                      >
-                        <ShoppingCart className="size-3.5" />
-                        Add to Cart
-                      </Button>
-                      <Button asChild variant="onLight" size="sm">
-                        <Link to="/shop/$productId" params={{ productId: p.id }}>
-                          Details
-                        </Link>
-                      </Button>
+                  </Link>
+
+                  <div className="flex flex-1 flex-col p-4">
+                    <span className="font-display text-[0.6rem] font-bold tracking-[0.16em] text-primary uppercase">
+                      {p.brand}
+                    </span>
+                    <Link to="/shop/$productId" params={{ productId: p.id }}>
+                      <h2 className="font-display mt-1 text-sm font-bold leading-snug transition-colors duration-200 group-hover:text-primary">
+                        {p.name}
+                      </h2>
+                    </Link>
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground line-clamp-2">
+                      {p.spec}
+                    </p>
+
+                    <div className="mt-auto pt-3">
+                      <div className="flex items-baseline gap-2">
+                        <span className="font-display text-lg font-bold text-foreground">
+                          {m ? formatMoney(m.variant.price) : formatPrice(p.price)}
+                        </span>
+                        {p.originalPrice && (
+                          <span className="text-xs text-muted-foreground line-through">
+                            {formatPrice(p.originalPrice)}
+                          </span>
+                        )}
+                        <span className="text-[0.65rem] text-muted-foreground">/{p.unit}</span>
+                      </div>
+                      <div className="mt-3 flex gap-2">
+                        {m || catalog.isLoading ? (
+                          <Button
+                            variant="cta"
+                            size="sm"
+                            className="flex-1"
+                            disabled={!m || cartLoading || !m.variant.availableForSale}
+                            onClick={() => handleAdd(p)}
+                          >
+                            <ShoppingCart className="size-3.5" />
+                            {catalog.isLoading
+                              ? "Loading…"
+                              : m && !m.variant.availableForSale
+                                ? "Out of stock"
+                                : "Add to Cart"}
+                          </Button>
+                        ) : (
+                          <Button asChild variant="cta" size="sm" className="flex-1">
+                            <Link to="/contact">Request Quote</Link>
+                          </Button>
+                        )}
+                        <Button asChild variant="onLight" size="sm">
+                          <Link to="/shop/$productId" params={{ productId: p.id }}>
+                            Details
+                          </Link>
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </Reveal>
-          ))}
+              </Reveal>
+            );
+          })}
         </div>
 
         {filtered.length === 0 && (

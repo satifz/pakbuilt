@@ -4,8 +4,9 @@ import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { Button } from "@/components/ui/button";
-import { useCart, useCartTotal, updateQty, removeFromCart, clearCart } from "@/lib/cart-store";
-import { formatPrice } from "@/data/shop";
+import { useCartStore } from "@/stores/cartStore";
+import { formatMoney } from "@/lib/shopify";
+import { useHydrated } from "@/hooks/useHydrated";
 import { company } from "@/data/company";
 
 const title = "Cart | PakBuilt Shop";
@@ -18,10 +19,18 @@ export const Route = createFileRoute("/cart")({
 });
 
 function CartPage() {
-  const items = useCart();
-  const total = useCartTotal();
+  const hydrated = useHydrated();
+  const storeItems = useCartStore((s) => s.items);
+  const checkoutUrl = useCartStore((s) => s.checkoutUrl);
+  const isLoading = useCartStore((s) => s.isLoading);
+  const updateQuantity = useCartStore((s) => s.updateQuantity);
+  const removeItem = useCartStore((s) => s.removeItem);
+  const clearCart = useCartStore((s) => s.clearCart);
 
-  const shopifyCheckoutUrl = `https://pakbuilt.myshopify.com/cart`;
+  const items = hydrated ? storeItems : [];
+  const currency = items[0]?.price.currencyCode ?? "PKR";
+  const totalAmount = items.reduce((n, i) => n + Number.parseFloat(i.price.amount) * i.quantity, 0);
+  const total = formatMoney({ amount: String(totalAmount), currencyCode: currency });
 
   return (
     <>
@@ -71,43 +80,47 @@ function CartPage() {
               </div>
 
               {items.map((item, i) => (
-                <Reveal key={item.id} delay={i * 30}>
+                <Reveal key={item.variantId} delay={i * 30}>
                   <div className="flex gap-4 rounded-xl border border-border bg-card p-4 shadow-card">
-                    <Link to="/shop/$productId" params={{ productId: item.id }} className="shrink-0">
+                    <Link
+                      to="/shop/$productId"
+                      params={{ productId: item.handle }}
+                      className="shrink-0"
+                    >
                       <img
                         src={item.image}
-                        alt={item.name}
+                        alt={item.title}
                         className="size-20 rounded-lg object-cover sm:size-24"
                       />
                     </Link>
                     <div className="flex flex-1 flex-col min-w-0">
                       <Link
                         to="/shop/$productId"
-                        params={{ productId: item.id }}
+                        params={{ productId: item.handle }}
                         className="font-display text-sm font-bold hover:text-primary transition-colors truncate"
                       >
-                        {item.name}
+                        {item.title}
                       </Link>
                       <span className="mt-0.5 text-xs text-muted-foreground">
-                        {formatPrice(item.price)} / {item.unit}
+                        {formatMoney(item.price)}
                       </span>
 
                       <div className="mt-auto flex items-center justify-between pt-2">
                         <div className="flex items-center rounded-md border border-border bg-background">
                           <button
                             type="button"
-                            onClick={() => updateQty(item.id, item.qty - 1)}
+                            onClick={() => updateQuantity(item.variantId, item.quantity - 1)}
                             className="grid size-8 place-items-center text-muted-foreground hover:text-foreground transition-colors"
                             aria-label="Decrease"
                           >
                             <Minus className="size-3.5" />
                           </button>
                           <span className="font-display w-8 text-center text-xs font-bold">
-                            {item.qty}
+                            {item.quantity}
                           </span>
                           <button
                             type="button"
-                            onClick={() => updateQty(item.id, item.qty + 1)}
+                            onClick={() => updateQuantity(item.variantId, item.quantity + 1)}
                             className="grid size-8 place-items-center text-muted-foreground hover:text-foreground transition-colors"
                             aria-label="Increase"
                           >
@@ -116,13 +129,16 @@ function CartPage() {
                         </div>
                         <div className="flex items-center gap-3">
                           <span className="font-display text-sm font-bold">
-                            {formatPrice(item.price * item.qty)}
+                            {formatMoney({
+                              amount: String(Number.parseFloat(item.price.amount) * item.quantity),
+                              currencyCode: item.price.currencyCode,
+                            })}
                           </span>
                           <button
                             type="button"
-                            onClick={() => removeFromCart(item.id)}
+                            onClick={() => removeItem(item.variantId)}
                             className="grid size-8 place-items-center rounded-md text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
-                            aria-label={`Remove ${item.name}`}
+                            aria-label={`Remove ${item.title}`}
                           >
                             <Trash2 className="size-4" />
                           </button>
@@ -142,7 +158,7 @@ function CartPage() {
                 <div className="mt-5 space-y-3 border-b border-border pb-5">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Subtotal</span>
-                    <span className="font-medium">{formatPrice(total)}</span>
+                    <span className="font-medium">{total}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Delivery</span>
@@ -152,22 +168,21 @@ function CartPage() {
 
                 <div className="mt-5 flex justify-between">
                   <span className="font-display text-base font-bold">Total</span>
-                  <span className="font-display text-xl font-bold text-primary">
-                    {formatPrice(total)}
-                  </span>
+                  <span className="font-display text-xl font-bold text-primary">{total}</span>
                 </div>
 
                 {/* Shopify checkout button */}
                 <Button
-                  asChild
                   variant="cta"
                   size="xl"
                   className="mt-6 w-full group"
+                  disabled={!checkoutUrl || isLoading}
+                  onClick={() => {
+                    if (checkoutUrl) window.location.href = checkoutUrl;
+                  }}
                 >
-                  <a href={shopifyCheckoutUrl} target="_blank" rel="noreferrer">
-                    Checkout via Shopify
-                    <ArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
-                  </a>
+                  {isLoading ? "Updating cart…" : "Checkout"}
+                  <ArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
                 </Button>
 
                 <p className="mt-3 text-center text-[0.65rem] text-muted-foreground">
@@ -180,11 +195,7 @@ function CartPage() {
                     Or send your order via WhatsApp
                   </p>
                   <Button asChild variant="whatsapp" size="lg" className="mt-3 w-full">
-                    <a
-                      href={buildWhatsAppOrderUrl(items, total)}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
+                    <a href={buildWhatsAppOrderUrl(items, total)} target="_blank" rel="noreferrer">
                       WhatsApp Order
                     </a>
                   </Button>
@@ -216,18 +227,16 @@ function CartPage() {
 }
 
 function buildWhatsAppOrderUrl(
-  items: { name: string; qty: number; price: number; unit: string }[],
-  total: number,
+  items: { title: string; quantity: number; price: { amount: string; currencyCode: string } }[],
+  total: string,
 ) {
-  const lines = items.map(
-    (i) => `• ${i.qty}× ${i.name} (${formatPrice(i.price)}/${i.unit})`,
-  );
+  const lines = items.map((i) => `• ${i.quantity}× ${i.title} (${formatMoney(i.price)})`);
   const msg = [
     "Hi PakBuilt, I'd like to order the following:",
     "",
     ...lines,
     "",
-    `Total: ${formatPrice(total)}`,
+    `Total: ${total}`,
     "",
     "Please confirm availability and delivery.",
   ].join("\n");
