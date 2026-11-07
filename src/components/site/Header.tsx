@@ -3,7 +3,8 @@ import { ArrowRight, Menu, Phone, ShoppingCart, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/site/Logo";
-import { useCartCount } from "@/lib/cart-store";
+import { useCartStore } from "@/stores/cartStore";
+import { useHydrated } from "@/hooks/useHydrated";
 import { company, navLinks } from "@/data/company";
 import { cn } from "@/lib/utils";
 
@@ -13,7 +14,8 @@ import { cn } from "@/lib/utils";
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const cartCount = useCartCount();
+  const hydrated = useHydrated();
+  const cartCount = useCartStore((s) => s.items.reduce((n, i) => n + i.quantity, 0));
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -66,10 +68,10 @@ export function Header() {
             ))}
           </nav>
 
-          <Button asChild variant="onLight" size="icon" className="relative hidden sm:inline-flex">
+          <Button asChild variant="onLight" size="icon" className="relative">
             <Link to="/cart" aria-label="Shopping cart">
               <ShoppingCart />
-              {cartCount > 0 && (
+              {hydrated && cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 grid size-4.5 place-items-center rounded-full bg-primary text-[0.6rem] font-bold text-primary-foreground">
                   {cartCount > 99 ? "99+" : cartCount}
                 </span>
