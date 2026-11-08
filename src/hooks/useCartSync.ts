@@ -12,10 +12,6 @@ export function useCartSync() {
       if (document.visibilityState === "visible") syncCart();
     };
     document.addEventListener("visibilitychange", handleVisibilityChange);
-    window.addEventListener("pageshow", handleVisibilityChange);
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      window.removeEventListener("pageshow", handleVisibilityChange);
-    };
+    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, [syncCart]);
 }
