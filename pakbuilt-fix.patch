@@ -1,0 +1,161 @@
+diff --git a/src/components/site/Header.tsx b/src/components/site/Header.tsx
+index fe8678c..a636190 100644
+--- a/src/components/site/Header.tsx
++++ b/src/components/site/Header.tsx
+@@ -3,6 +3,7 @@ import { ArrowRight, Menu, Phone, ShoppingCart, X } from "lucide-react";
+ import { useEffect, useState } from "react";
+ import { Button } from "@/components/ui/button";
+ import { Logo } from "@/components/site/Logo";
++import { ThemeToggle } from "@/components/site/ThemeToggle";
+ import { useCartStore } from "@/stores/cartStore";
+ import { useHydrated } from "@/hooks/useHydrated";
+ import { company, navLinks } from "@/data/company";
+@@ -36,8 +37,8 @@ export function Header() {
+       className={cn(
+         "fixed inset-x-0 top-0 z-50 text-foreground transition-[background-color,box-shadow,border-color] duration-500",
+         scrolled || open
+-          ? "border-b border-foreground/10 bg-white shadow-lift"
+-          : "border-b border-foreground/5 bg-white",
++          ? "border-b border-foreground/10 bg-background shadow-lift"
++          : "border-b border-foreground/5 bg-background",
+       )}
+     >
+       <div
+@@ -46,7 +47,8 @@ export function Header() {
+           scrolled ? "py-2.5" : "py-4",
+         )}
+       >
+-        <Logo tone="light" className="min-w-0" />
++        <Logo tone="light" className="min-w-0 dark:hidden" />
++        <Logo tone="dark" className="hidden min-w-0 dark:inline-flex" />
+ 
+         <div className="flex items-center gap-1.5">
+           <nav className="mr-2 hidden items-center gap-0.5 lg:flex" aria-label="Main">
+@@ -68,6 +70,8 @@ export function Header() {
+             ))}
+           </nav>
+ 
++          <ThemeToggle />
++
+           <Button asChild variant="onLight" size="icon" className="relative">
+             <Link to="/cart" aria-label="Shopping cart">
+               <ShoppingCart />
+@@ -108,7 +112,7 @@ export function Header() {
+       {/* Mobile menu */}
+       <div
+         className={cn(
+-          "overflow-hidden border-t border-foreground/10 bg-white transition-[max-height,opacity] duration-400 ease-out lg:hidden",
++          "overflow-hidden border-t border-foreground/10 bg-background transition-[max-height,opacity] duration-400 ease-out lg:hidden",
+           open ? "max-h-[80vh] opacity-100" : "max-h-0 border-t-transparent opacity-0",
+         )}
+       >
+diff --git a/src/components/site/ThemeToggle.tsx b/src/components/site/ThemeToggle.tsx
+new file mode 100644
+index 0000000..31544b0
+--- /dev/null
++++ b/src/components/site/ThemeToggle.tsx
+@@ -0,0 +1,35 @@
++import { Moon, Sun } from "lucide-react";
++import { useEffect, useState } from "react";
++import { Button } from "@/components/ui/button";
++
++/** Moon in light mode, sun in dark mode. Remembers the choice. */
++export function ThemeToggle() {
++  const [dark, setDark] = useState(false);
++
++  useEffect(() => {
++    setDark(document.documentElement.classList.contains("dark"));
++  }, []);
++
++  const toggle = () => {
++    const next = !dark;
++    setDark(next);
++    document.documentElement.classList.toggle("dark", next);
++    try {
++      localStorage.setItem("theme", next ? "dark" : "light");
++    } catch {
++      /* storage blocked: toggle still works for this visit */
++    }
++  };
++
++  return (
++    <Button
++      type="button"
++      variant="onLight"
++      size="icon"
++      onClick={toggle}
++      aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
++    >
++      {dark ? <Sun /> : <Moon />}
++    </Button>
++  );
++}
+diff --git a/src/hooks/useCartSync.ts b/src/hooks/useCartSync.ts
+index b5c70ec..fb4f6e7 100644
+--- a/src/hooks/useCartSync.ts
++++ b/src/hooks/useCartSync.ts
+@@ -12,6 +12,10 @@ export function useCartSync() {
+       if (document.visibilityState === "visible") syncCart();
+     };
+     document.addEventListener("visibilitychange", handleVisibilityChange);
+-    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
++    window.addEventListener("pageshow", handleVisibilityChange);
++    return () => {
++      document.removeEventListener("visibilitychange", handleVisibilityChange);
++      window.removeEventListener("pageshow", handleVisibilityChange);
++    };
+   }, [syncCart]);
+ }
+diff --git a/src/lib/shopify.ts b/src/lib/shopify.ts
+index 883cb6a..e941aa9 100644
+--- a/src/lib/shopify.ts
++++ b/src/lib/shopify.ts
+@@ -422,7 +422,9 @@ export async function queryCartTotalQuantity(cartId: string): Promise<number | u
+   const data = await storefrontApiRequest<{
+     data: { cart: { id: string; totalQuantity: number } | null };
+   }>(CART_QUERY, { id: cartId });
+-  return data?.data?.cart?.totalQuantity;
++  if (!data) return undefined; // request failed: keep local cart
++  // Shopify returns cart: null once an order is placed, so treat that as empty.
++  return data.data?.cart?.totalQuantity ?? 0;
+ }
+ 
+ // ---------- Catalog reads ----------
+diff --git a/src/routes/__root.tsx b/src/routes/__root.tsx
+index 24fada9..2b4ba6f 100644
+--- a/src/routes/__root.tsx
++++ b/src/routes/__root.tsx
+@@ -151,8 +151,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
+ 
+ function RootShell({ children }: { children: ReactNode }) {
+   return (
+-    <html lang="en">
++    <html lang="en" suppressHydrationWarning>
+       <head>
++        <script
++          dangerouslySetInnerHTML={{
++            __html:
++              'try{if(localStorage.getItem("theme")==="dark")document.documentElement.classList.add("dark")}catch(e){}',
++          }}
++        />
+         <HeadContent />
+       </head>
+       <body>
+diff --git a/src/routes/cart.tsx b/src/routes/cart.tsx
+index 82391cb..008bbe6 100644
+--- a/src/routes/cart.tsx
++++ b/src/routes/cart.tsx
+@@ -177,8 +177,11 @@ function CartPage() {
+                   size="xl"
+                   className="mt-6 w-full group"
+                   disabled={!checkoutUrl || isLoading}
+-                  onClick={() => {
+-                    if (checkoutUrl) window.location.href = checkoutUrl;
++                  onClick={async () => {
++                    // Make sure this cart wasn't already paid for before sending them to Shopify.
++                    await useCartStore.getState().syncCart();
++                    const { items: live, checkoutUrl: url } = useCartStore.getState();
++                    if (live.length > 0 && url) window.location.href = url;
+                   }}
+                 >
+                   {isLoading ? "Updating cart…" : "Checkout"}
