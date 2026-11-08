@@ -2,8 +2,7 @@
 // The storefront token is a public, publishable credential (like an anon key).
 
 export const SHOPIFY_API_VERSION = "2026-10";
-export const SHOPIFY_STORE_PERMANENT_DOMAIN =
-  "pakbuilt-build-pukka-aoxco-iduwuuaw.myshopify.com";
+export const SHOPIFY_STORE_PERMANENT_DOMAIN = "pakbuilt-build-pukka-aoxco-iduwuuaw.myshopify.com";
 
 const SHOPIFY_STOREFRONT_URL = `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
 const SHOPIFY_STOREFRONT_TOKEN = "95fddbfb4b329600e7ac24678dab06d4";
@@ -24,6 +23,9 @@ export interface ShopifyProduct {
     title: string;
     description: string;
     handle: string;
+    productType?: string;
+    vendor?: string;
+    tags?: string[];
     availableForSale: boolean;
     priceRange: { minVariantPrice: { amount: string; currencyCode: string } };
     images: { edges: Array<{ node: { url: string; altText: string | null } }> };
@@ -43,6 +45,9 @@ export const PRODUCTS_QUERY = /* GraphQL */ `
           title
           description
           handle
+          productType
+          vendor
+          tags
           availableForSale
           priceRange {
             minVariantPrice {
@@ -248,7 +253,9 @@ export async function storefrontApiRequest<T = unknown>(
 
   const data = await response.json();
   if (data.errors) {
-    throw new Error(`Error calling Shopify: ${data.errors.map((e: { message: string }) => e.message).join(", ")}`);
+    throw new Error(
+      `Error calling Shopify: ${data.errors.map((e: { message: string }) => e.message).join(", ")}`,
+    );
   }
 
   return data as T;
@@ -336,7 +343,9 @@ export async function addLineToShopifyCart(
   const data = await storefrontApiRequest<{
     data: {
       cartLinesAdd: {
-        cart: { lines: { edges: Array<{ node: { id: string; merchandise: { id: string } } }> } } | null;
+        cart: {
+          lines: { edges: Array<{ node: { id: string; merchandise: { id: string } } }> };
+        } | null;
         userErrors: Array<{ field: string[] | null; message: string }>;
       };
     };
@@ -409,9 +418,7 @@ export async function removeLineFromShopifyCart(
   return { success: true };
 }
 
-export async function queryCartTotalQuantity(
-  cartId: string,
-): Promise<number | undefined> {
+export async function queryCartTotalQuantity(cartId: string): Promise<number | undefined> {
   const data = await storefrontApiRequest<{
     data: { cart: { id: string; totalQuantity: number } | null };
   }>(CART_QUERY, { id: cartId });
