@@ -103,6 +103,14 @@ export function useShopifyCatalog() {
       return { product, match: node ? toMatch(node) : null };
     });
 
+    // Shopify is the source of truth: anything not in Shopify disappears from the shop.
+    // If Shopify returns nothing, keep the local list as Request Quote.
+    if (nodes.length > 0) {
+      for (let i = result.length - 1; i >= 0; i--) {
+        if (!result[i]!.match) result.splice(i, 1);
+      }
+    }
+
     for (const n of nodes) {
       if (used.has(n.handle)) continue;
       const match = toMatch(n);
