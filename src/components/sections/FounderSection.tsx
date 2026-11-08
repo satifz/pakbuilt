@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import founderImage from "@/assets/founder-placeholder.jpg";
+import founderBackground from "@/assets/founder-placeholder.jpg";
+import founderPhoto from "@/assets/founder-atif.png";
 import { Reveal } from "@/components/site/Reveal";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { company } from "@/data/company";
@@ -11,15 +12,27 @@ export function FounderSection() {
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[0.85fr_1fr] lg:px-8 lg:py-28">
         <Reveal variant="clip">
           <div className="relative overflow-hidden rounded-xl border border-charcoal-foreground/10">
+            {/* Dark gradient background (unchanged) */}
             <img
-              src={founderImage}
-              alt="Placeholder portrait to be replaced with a photograph of founder Atif Zaidi"
+              src={founderBackground}
+              alt=""
+              aria-hidden="true"
               loading="lazy"
               className="aspect-[4/5] w-full object-cover"
             />
+            {/* Founder photo (transparent PNG) sitting on the gradient */}
+            <img
+              src={founderPhoto}
+              alt="Atif Zaidi, Founder and CEO of PakBuilt"
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-contain object-bottom"
+            />
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-charcoal to-transparent p-5">
               <p className="font-display text-lg font-bold">{company.founder.name}</p>
-              <p className="text-xs tracking-[0.16em] text-primary uppercase">{company.founder.role}</p>
+              <p className="text-xs tracking-[0.16em] text-primary uppercase">
+                {company.founder.role}
+              </p>
             </div>
           </div>
         </Reveal>
