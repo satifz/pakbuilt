@@ -3,6 +3,7 @@ import { ArrowRight, Menu, Phone, ShoppingCart, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/site/Logo";
+import { ThemeToggle } from "@/components/site/ThemeToggle";
 import { useCartStore } from "@/stores/cartStore";
 import { useHydrated } from "@/hooks/useHydrated";
 import { company, navLinks } from "@/data/company";
@@ -36,8 +37,8 @@ export function Header() {
       className={cn(
         "fixed inset-x-0 top-0 z-50 text-foreground transition-[background-color,box-shadow,border-color] duration-500",
         scrolled || open
-          ? "border-b border-foreground/10 bg-white shadow-lift"
-          : "border-b border-foreground/5 bg-white",
+          ? "border-b border-foreground/10 bg-background shadow-lift"
+          : "border-b border-foreground/5 bg-background",
       )}
     >
       <div
@@ -46,7 +47,8 @@ export function Header() {
           scrolled ? "py-2.5" : "py-4",
         )}
       >
-        <Logo tone="light" className="min-w-0" />
+        <Logo tone="light" className="min-w-0 dark:hidden" />
+        <Logo tone="dark" className="hidden min-w-0 dark:inline-flex" />
 
         <div className="flex items-center gap-1.5">
           <nav className="mr-2 hidden items-center gap-0.5 lg:flex" aria-label="Main">
@@ -67,6 +69,8 @@ export function Header() {
               </Link>
             ))}
           </nav>
+
+          <ThemeToggle />
 
           <Button asChild variant="onLight" size="icon" className="relative">
             <Link to="/cart" aria-label="Shopping cart">
@@ -108,7 +112,7 @@ export function Header() {
       {/* Mobile menu */}
       <div
         className={cn(
-          "overflow-hidden border-t border-foreground/10 bg-white transition-[max-height,opacity] duration-400 ease-out lg:hidden",
+          "overflow-hidden border-t border-foreground/10 bg-background transition-[max-height,opacity] duration-400 ease-out lg:hidden",
           open ? "max-h-[80vh] opacity-100" : "max-h-0 border-t-transparent opacity-0",
         )}
       >

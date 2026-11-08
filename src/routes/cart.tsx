@@ -177,8 +177,11 @@ function CartPage() {
                   size="xl"
                   className="mt-6 w-full group"
                   disabled={!checkoutUrl || isLoading}
-                  onClick={() => {
-                    if (checkoutUrl) window.location.href = checkoutUrl;
+                  onClick={async () => {
+                    // Make sure this cart wasn't already paid for before sending them to Shopify.
+                    await useCartStore.getState().syncCart();
+                    const { items: live, checkoutUrl: url } = useCartStore.getState();
+                    if (live.length > 0 && url) window.location.href = url;
                   }}
                 >
                   {isLoading ? "Updating cart…" : "Checkout"}
