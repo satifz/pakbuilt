@@ -1,0 +1,1010 @@
+diff --git a/src/components/site/Header.tsx b/src/components/site/Header.tsx
+index 57a6beb..fe8678c 100644
+--- a/src/components/site/Header.tsx
++++ b/src/components/site/Header.tsx
+@@ -3,7 +3,8 @@ import { ArrowRight, Menu, Phone, ShoppingCart, X } from "lucide-react";
+ import { useEffect, useState } from "react";
+ import { Button } from "@/components/ui/button";
+ import { Logo } from "@/components/site/Logo";
+-import { useCartCount } from "@/lib/cart-store";
++import { useCartStore } from "@/stores/cartStore";
++import { useHydrated } from "@/hooks/useHydrated";
+ import { company, navLinks } from "@/data/company";
+ import { cn } from "@/lib/utils";
+ 
+@@ -13,7 +14,8 @@ import { cn } from "@/lib/utils";
+ export function Header() {
+   const [scrolled, setScrolled] = useState(false);
+   const [open, setOpen] = useState(false);
+-  const cartCount = useCartCount();
++  const hydrated = useHydrated();
++  const cartCount = useCartStore((s) => s.items.reduce((n, i) => n + i.quantity, 0));
+ 
+   useEffect(() => {
+     const onScroll = () => setScrolled(window.scrollY > 24);
+@@ -66,10 +68,10 @@ export function Header() {
+             ))}
+           </nav>
+ 
+-          <Button asChild variant="onLight" size="icon" className="relative hidden sm:inline-flex">
++          <Button asChild variant="onLight" size="icon" className="relative">
+             <Link to="/cart" aria-label="Shopping cart">
+               <ShoppingCart />
+-              {cartCount > 0 && (
++              {hydrated && cartCount > 0 && (
+                 <span className="absolute -top-1 -right-1 grid size-4.5 place-items-center rounded-full bg-primary text-[0.6rem] font-bold text-primary-foreground">
+                   {cartCount > 99 ? "99+" : cartCount}
+                 </span>
+diff --git a/src/hooks/useHydrated.ts b/src/hooks/useHydrated.ts
+new file mode 100644
+index 0000000..686f10f
+--- /dev/null
++++ b/src/hooks/useHydrated.ts
+@@ -0,0 +1,8 @@
++import { useEffect, useState } from "react";
++
++/** True only after the first client render. Avoids SSR/localStorage hydration mismatches. */
++export function useHydrated() {
++  const [hydrated, setHydrated] = useState(false);
++  useEffect(() => setHydrated(true), []);
++  return hydrated;
++}
+diff --git a/src/hooks/useShopifyCatalog.ts b/src/hooks/useShopifyCatalog.ts
+new file mode 100644
+index 0000000..08232b0
+--- /dev/null
++++ b/src/hooks/useShopifyCatalog.ts
+@@ -0,0 +1,152 @@
++import { useMemo } from "react";
++import { useQuery } from "@tanstack/react-query";
++import { fetchShopifyProducts, type ShopifyProduct, type ShopifyVariant } from "@/lib/shopify";
++import { shopCategories, shopProducts, type ShopProduct } from "@/data/shop";
++import type { CartItem } from "@/stores/cartStore";
++
++export interface ShopifyMatch {
++  variant: ShopifyVariant;
++  title: string;
++  image?: string | undefined;
++}
++
++type ShopifyNode = ShopifyProduct["node"];
++
++const norm = (s: string) =>
++  s
++    .toLowerCase()
++    .replace(/[^a-z0-9]+/g, " ")
++    .trim();
++
++function pickVariant(p: ShopifyNode): ShopifyVariant | null {
++  const variants = p.variants.edges.map((e) => e.node);
++  return variants.find((v) => v.availableForSale) ?? variants[0] ?? null;
++}
++
++function toMatch(n: ShopifyNode): ShopifyMatch | null {
++  const variant = pickVariant(n);
++  if (!variant) return null;
++  return { variant, title: n.title, image: n.images.edges[0]?.node.url };
++}
++
++/** Finds the category slug for a Shopify product from its product type or tags. */
++function categoryFor(n: ShopifyNode): string {
++  const candidates = [n.productType ?? "", ...(n.tags ?? [])].map(norm).filter(Boolean);
++  for (const c of candidates) {
++    const hit = shopCategories.find((cat) => norm(cat.name) === c || norm(cat.slug) === c);
++    if (hit) return hit.slug;
++  }
++  return "";
++}
++
++/** Builds a shop card for a product that exists in Shopify but not in the local catalogue. */
++function fromShopify(n: ShopifyNode): ShopProduct {
++  const category = categoryFor(n);
++  const cat = shopCategories.find((c) => c.slug === category);
++  const subTag = (n.tags ?? []).find((t) => !cat || norm(t) !== norm(cat.name));
++  const firstImage = n.images.edges[0]?.node.url;
++  return {
++    id: n.handle,
++    name: n.title,
++    category,
++    subcategory: subTag ?? n.productType ?? "",
++    brand: n.vendor ?? "",
++    spec: n.description.trim().slice(0, 140),
++    unit: "",
++    price: Number.parseFloat(n.priceRange.minVariantPrice.amount),
++    image: firstImage ?? cat?.image ?? shopCategories[0]!.image,
++    features: [],
++  };
++}
++
++export interface ShopEntry {
++  product: ShopProduct;
++  match: ShopifyMatch | null;
++}
++
++/**
++ * Merges your local catalogue (images, specs) with the live Shopify catalogue.
++ * - Local products link to their Shopify product (by handle, then title) for price + checkout.
++ * - Any product that exists ONLY in Shopify is added to the shop automatically.
++ * - Local products with no Shopify match are hidden once Shopify has products
++ *   (so deleting/archiving a product in Shopify removes it from the site).
++ */
++export function useShopifyCatalog() {
++  const query = useQuery({
++    queryKey: ["shopify-products"],
++    queryFn: () => fetchShopifyProducts(250),
++    staleTime: 60_000,
++  });
++
++  const nodes = useMemo(() => (query.data ?? []).map((p) => p.node), [query.data]);
++
++  const entries = useMemo<ShopEntry[]>(() => {
++    const used = new Set<string>();
++
++    const findFor = (local: ShopProduct): ShopifyNode | null => {
++      const free = nodes.filter((n) => !used.has(n.handle));
++      const name = norm(local.name);
++      let found =
++        free.find((n) => n.handle === local.id) ?? free.find((n) => norm(n.title) === name) ?? null;
++      if (!found) {
++        const partial = free.filter((n) => {
++          const t = norm(n.title);
++          return t.startsWith(name) || name.startsWith(t);
++        });
++        if (partial.length === 1) found = partial[0] ?? null;
++      }
++      return found;
++    };
++
++    const result: ShopEntry[] = shopProducts.map((product) => {
++      const node = findFor(product);
++      if (node) used.add(node.handle);
++      return { product, match: node ? toMatch(node) : null };
++    });
++
++    // Shopify is the source of truth: once it has products, anything not in Shopify
++    // (deleted, archived or draft) disappears from the shop. If Shopify returns nothing
++    // (not set up or temporarily down), keep the local catalogue as "Request Quote".
++    if (nodes.length > 0) {
++      for (let i = result.length - 1; i >= 0; i--) {
++        if (!result[i]!.match) result.splice(i, 1);
++      }
++    }
++
++    for (const n of nodes) {
++      if (used.has(n.handle)) continue;
++      const match = toMatch(n);
++      if (match) result.push({ product: fromShopify(n), match });
++    }
++    return result;
++  }, [nodes]);
++
++  const products = useMemo(() => entries.map((e) => e.product), [entries]);
++  const matchMap = useMemo(() => new Map(entries.map((e) => [e.product.id, e.match])), [entries]);
++
++  return {
++    products,
++    match: (local: ShopProduct): ShopifyMatch | null => matchMap.get(local.id) ?? null,
++    isLoading: query.isLoading,
++    isError: query.isError,
++    count: nodes.length,
++  };
++}
++
++/** Builds the cart line for a matched product. `handle` holds the product id so cart links work. */
++export function toCartItem(
++  local: ShopProduct,
++  m: ShopifyMatch,
++  quantity: number,
++): Omit<CartItem, "lineId"> {
++  return {
++    variantId: m.variant.id,
++    variantTitle: m.variant.title,
++    handle: local.id,
++    title: local.name,
++    image: local.image,
++    price: m.variant.price,
++    quantity,
++    selectedOptions: m.variant.selectedOptions,
++  };
++}
+diff --git a/src/lib/cart-store.ts b/src/lib/cart-store.ts
+deleted file mode 100644
+index 5159521..0000000
+--- a/src/lib/cart-store.ts
++++ /dev/null
+@@ -1,71 +0,0 @@
+-import { useSyncExternalStore } from "react";
+-
+-export interface CartItem {
+-  id: string;
+-  name: string;
+-  price: number;
+-  unit: string;
+-  image: string;
+-  qty: number;
+-}
+-
+-type Listener = () => void;
+-
+-let items: CartItem[] = [];
+-const listeners = new Set<Listener>();
+-
+-function emit() {
+-  for (const l of listeners) l();
+-}
+-
+-function snapshot(): CartItem[] {
+-  return items;
+-}
+-
+-function subscribe(l: Listener) {
+-  listeners.add(l);
+-  return () => listeners.delete(l);
+-}
+-
+-export function addToCart(product: Omit<CartItem, "qty">, qty = 1) {
+-  const existing = items.find((i) => i.id === product.id);
+-  if (existing) {
+-    items = items.map((i) => (i.id === product.id ? { ...i, qty: i.qty + qty } : i));
+-  } else {
+-    items = [...items, { ...product, qty }];
+-  }
+-  emit();
+-}
+-
+-export function updateQty(id: string, qty: number) {
+-  if (qty <= 0) {
+-    items = items.filter((i) => i.id !== id);
+-  } else {
+-    items = items.map((i) => (i.id === id ? { ...i, qty } : i));
+-  }
+-  emit();
+-}
+-
+-export function removeFromCart(id: string) {
+-  items = items.filter((i) => i.id !== id);
+-  emit();
+-}
+-
+-export function clearCart() {
+-  items = [];
+-  emit();
+-}
+-
+-export function useCart() {
+-  return useSyncExternalStore(subscribe, snapshot, snapshot);
+-}
+-
+-export function useCartCount() {
+-  const cart = useCart();
+-  return cart.reduce((sum, i) => sum + i.qty, 0);
+-}
+-
+-export function useCartTotal() {
+-  const cart = useCart();
+-  return cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+-}
+diff --git a/src/lib/shopify.ts b/src/lib/shopify.ts
+index 88354c4..883cb6a 100644
+--- a/src/lib/shopify.ts
++++ b/src/lib/shopify.ts
+@@ -2,8 +2,7 @@
+ // The storefront token is a public, publishable credential (like an anon key).
+ 
+ export const SHOPIFY_API_VERSION = "2026-10";
+-export const SHOPIFY_STORE_PERMANENT_DOMAIN =
+-  "pakbuilt-build-pukka-aoxco-iduwuuaw.myshopify.com";
++export const SHOPIFY_STORE_PERMANENT_DOMAIN = "pakbuilt-build-pukka-aoxco-iduwuuaw.myshopify.com";
+ 
+ const SHOPIFY_STOREFRONT_URL = `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
+ const SHOPIFY_STOREFRONT_TOKEN = "95fddbfb4b329600e7ac24678dab06d4";
+@@ -24,6 +23,9 @@ export interface ShopifyProduct {
+     title: string;
+     description: string;
+     handle: string;
++    productType?: string;
++    vendor?: string;
++    tags?: string[];
+     availableForSale: boolean;
+     priceRange: { minVariantPrice: { amount: string; currencyCode: string } };
+     images: { edges: Array<{ node: { url: string; altText: string | null } }> };
+@@ -43,6 +45,9 @@ export const PRODUCTS_QUERY = /* GraphQL */ `
+           title
+           description
+           handle
++          productType
++          vendor
++          tags
+           availableForSale
+           priceRange {
+             minVariantPrice {
+@@ -248,7 +253,9 @@ export async function storefrontApiRequest<T = unknown>(
+ 
+   const data = await response.json();
+   if (data.errors) {
+-    throw new Error(`Error calling Shopify: ${data.errors.map((e: { message: string }) => e.message).join(", ")}`);
++    throw new Error(
++      `Error calling Shopify: ${data.errors.map((e: { message: string }) => e.message).join(", ")}`,
++    );
+   }
+ 
+   return data as T;
+@@ -336,7 +343,9 @@ export async function addLineToShopifyCart(
+   const data = await storefrontApiRequest<{
+     data: {
+       cartLinesAdd: {
+-        cart: { lines: { edges: Array<{ node: { id: string; merchandise: { id: string } } }> } } | null;
++        cart: {
++          lines: { edges: Array<{ node: { id: string; merchandise: { id: string } } }> };
++        } | null;
+         userErrors: Array<{ field: string[] | null; message: string }>;
+       };
+     };
+@@ -409,9 +418,7 @@ export async function removeLineFromShopifyCart(
+   return { success: true };
+ }
+ 
+-export async function queryCartTotalQuantity(
+-  cartId: string,
+-): Promise<number | undefined> {
++export async function queryCartTotalQuantity(cartId: string): Promise<number | undefined> {
+   const data = await storefrontApiRequest<{
+     data: { cart: { id: string; totalQuantity: number } | null };
+   }>(CART_QUERY, { id: cartId });
+diff --git a/src/routes/__root.tsx b/src/routes/__root.tsx
+index 2c322ef..24fada9 100644
+--- a/src/routes/__root.tsx
++++ b/src/routes/__root.tsx
+@@ -15,6 +15,7 @@ import { FloatingActions } from "@/components/site/FloatingActions";
+ import { Footer } from "@/components/site/Footer";
+ import { Header } from "@/components/site/Header";
+ import { Toaster } from "@/components/ui/sonner";
++import { useCartSync } from "@/hooks/useCartSync";
+ 
+ function NotFoundComponent() {
+   return (
+@@ -167,6 +168,7 @@ function RootComponent() {
+ 
+   return (
+     <QueryClientProvider client={queryClient}>
++      <CartSync />
+       <Header />
+       <main id="main">
+         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+@@ -178,3 +180,8 @@ function RootComponent() {
+     </QueryClientProvider>
+   );
+ }
++
++function CartSync() {
++  useCartSync();
++  return null;
++}
+diff --git a/src/routes/cart.tsx b/src/routes/cart.tsx
+index e0babb8..82391cb 100644
+--- a/src/routes/cart.tsx
++++ b/src/routes/cart.tsx
+@@ -4,8 +4,9 @@ import { PageHero } from "@/components/site/PageHero";
+ import { Reveal } from "@/components/site/Reveal";
+ import { SectionHeading } from "@/components/site/SectionHeading";
+ import { Button } from "@/components/ui/button";
+-import { useCart, useCartTotal, updateQty, removeFromCart, clearCart } from "@/lib/cart-store";
+-import { formatPrice } from "@/data/shop";
++import { useCartStore } from "@/stores/cartStore";
++import { formatMoney } from "@/lib/shopify";
++import { useHydrated } from "@/hooks/useHydrated";
+ import { company } from "@/data/company";
+ 
+ const title = "Cart | PakBuilt Shop";
+@@ -18,10 +19,18 @@ export const Route = createFileRoute("/cart")({
+ });
+ 
+ function CartPage() {
+-  const items = useCart();
+-  const total = useCartTotal();
+-
+-  const shopifyCheckoutUrl = `https://pakbuilt.myshopify.com/cart`;
++  const hydrated = useHydrated();
++  const storeItems = useCartStore((s) => s.items);
++  const checkoutUrl = useCartStore((s) => s.checkoutUrl);
++  const isLoading = useCartStore((s) => s.isLoading);
++  const updateQuantity = useCartStore((s) => s.updateQuantity);
++  const removeItem = useCartStore((s) => s.removeItem);
++  const clearCart = useCartStore((s) => s.clearCart);
++
++  const items = hydrated ? storeItems : [];
++  const currency = items[0]?.price.currencyCode ?? "PKR";
++  const totalAmount = items.reduce((n, i) => n + Number.parseFloat(i.price.amount) * i.quantity, 0);
++  const total = formatMoney({ amount: String(totalAmount), currencyCode: currency });
+ 
+   return (
+     <>
+@@ -71,43 +80,47 @@ function CartPage() {
+               </div>
+ 
+               {items.map((item, i) => (
+-                <Reveal key={item.id} delay={i * 30}>
++                <Reveal key={item.variantId} delay={i * 30}>
+                   <div className="flex gap-4 rounded-xl border border-border bg-card p-4 shadow-card">
+-                    <Link to="/shop/$productId" params={{ productId: item.id }} className="shrink-0">
++                    <Link
++                      to="/shop/$productId"
++                      params={{ productId: item.handle }}
++                      className="shrink-0"
++                    >
+                       <img
+                         src={item.image}
+-                        alt={item.name}
++                        alt={item.title}
+                         className="size-20 rounded-lg object-cover sm:size-24"
+                       />
+                     </Link>
+                     <div className="flex flex-1 flex-col min-w-0">
+                       <Link
+                         to="/shop/$productId"
+-                        params={{ productId: item.id }}
++                        params={{ productId: item.handle }}
+                         className="font-display text-sm font-bold hover:text-primary transition-colors truncate"
+                       >
+-                        {item.name}
++                        {item.title}
+                       </Link>
+                       <span className="mt-0.5 text-xs text-muted-foreground">
+-                        {formatPrice(item.price)} / {item.unit}
++                        {formatMoney(item.price)}
+                       </span>
+ 
+                       <div className="mt-auto flex items-center justify-between pt-2">
+                         <div className="flex items-center rounded-md border border-border bg-background">
+                           <button
+                             type="button"
+-                            onClick={() => updateQty(item.id, item.qty - 1)}
++                            onClick={() => updateQuantity(item.variantId, item.quantity - 1)}
+                             className="grid size-8 place-items-center text-muted-foreground hover:text-foreground transition-colors"
+                             aria-label="Decrease"
+                           >
+                             <Minus className="size-3.5" />
+                           </button>
+                           <span className="font-display w-8 text-center text-xs font-bold">
+-                            {item.qty}
++                            {item.quantity}
+                           </span>
+                           <button
+                             type="button"
+-                            onClick={() => updateQty(item.id, item.qty + 1)}
++                            onClick={() => updateQuantity(item.variantId, item.quantity + 1)}
+                             className="grid size-8 place-items-center text-muted-foreground hover:text-foreground transition-colors"
+                             aria-label="Increase"
+                           >
+@@ -116,13 +129,16 @@ function CartPage() {
+                         </div>
+                         <div className="flex items-center gap-3">
+                           <span className="font-display text-sm font-bold">
+-                            {formatPrice(item.price * item.qty)}
++                            {formatMoney({
++                              amount: String(Number.parseFloat(item.price.amount) * item.quantity),
++                              currencyCode: item.price.currencyCode,
++                            })}
+                           </span>
+                           <button
+                             type="button"
+-                            onClick={() => removeFromCart(item.id)}
++                            onClick={() => removeItem(item.variantId)}
+                             className="grid size-8 place-items-center rounded-md text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+-                            aria-label={`Remove ${item.name}`}
++                            aria-label={`Remove ${item.title}`}
+                           >
+                             <Trash2 className="size-4" />
+                           </button>
+@@ -142,7 +158,7 @@ function CartPage() {
+                 <div className="mt-5 space-y-3 border-b border-border pb-5">
+                   <div className="flex justify-between text-sm">
+                     <span className="text-muted-foreground">Subtotal</span>
+-                    <span className="font-medium">{formatPrice(total)}</span>
++                    <span className="font-medium">{total}</span>
+                   </div>
+                   <div className="flex justify-between text-sm">
+                     <span className="text-muted-foreground">Delivery</span>
+@@ -152,22 +168,21 @@ function CartPage() {
+ 
+                 <div className="mt-5 flex justify-between">
+                   <span className="font-display text-base font-bold">Total</span>
+-                  <span className="font-display text-xl font-bold text-primary">
+-                    {formatPrice(total)}
+-                  </span>
++                  <span className="font-display text-xl font-bold text-primary">{total}</span>
+                 </div>
+ 
+                 {/* Shopify checkout button */}
+                 <Button
+-                  asChild
+                   variant="cta"
+                   size="xl"
+                   className="mt-6 w-full group"
++                  disabled={!checkoutUrl || isLoading}
++                  onClick={() => {
++                    if (checkoutUrl) window.location.href = checkoutUrl;
++                  }}
+                 >
+-                  <a href={shopifyCheckoutUrl} target="_blank" rel="noreferrer">
+-                    Checkout via Shopify
+-                    <ArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+-                  </a>
++                  {isLoading ? "Updating cart…" : "Checkout"}
++                  <ArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+                 </Button>
+ 
+                 <p className="mt-3 text-center text-[0.65rem] text-muted-foreground">
+@@ -180,11 +195,7 @@ function CartPage() {
+                     Or send your order via WhatsApp
+                   </p>
+                   <Button asChild variant="whatsapp" size="lg" className="mt-3 w-full">
+-                    <a
+-                      href={buildWhatsAppOrderUrl(items, total)}
+-                      target="_blank"
+-                      rel="noreferrer"
+-                    >
++                    <a href={buildWhatsAppOrderUrl(items, total)} target="_blank" rel="noreferrer">
+                       WhatsApp Order
+                     </a>
+                   </Button>
+@@ -216,18 +227,16 @@ function CartPage() {
+ }
+ 
+ function buildWhatsAppOrderUrl(
+-  items: { name: string; qty: number; price: number; unit: string }[],
+-  total: number,
++  items: { title: string; quantity: number; price: { amount: string; currencyCode: string } }[],
++  total: string,
+ ) {
+-  const lines = items.map(
+-    (i) => `• ${i.qty}× ${i.name} (${formatPrice(i.price)}/${i.unit})`,
+-  );
++  const lines = items.map((i) => `• ${i.quantity}× ${i.title} (${formatMoney(i.price)})`);
+   const msg = [
+     "Hi PakBuilt, I'd like to order the following:",
+     "",
+     ...lines,
+     "",
+-    `Total: ${formatPrice(total)}`,
++    `Total: ${total}`,
+     "",
+     "Please confirm availability and delivery.",
+   ].join("\n");
+diff --git a/src/routes/shop.$productId.tsx b/src/routes/shop.$productId.tsx
+index 1e0c1d2..419084f 100644
+--- a/src/routes/shop.$productId.tsx
++++ b/src/routes/shop.$productId.tsx
+@@ -4,16 +4,16 @@ import { useState } from "react";
+ import { PageHero } from "@/components/site/PageHero";
+ import { Reveal } from "@/components/site/Reveal";
+ import { Button } from "@/components/ui/button";
+-import { addToCart } from "@/lib/cart-store";
++import { useCartStore } from "@/stores/cartStore";
++import { formatMoney } from "@/lib/shopify";
++import { toCartItem, useShopifyCatalog, type ShopifyMatch } from "@/hooks/useShopifyCatalog";
+ import { shopCategories, shopProducts, formatPrice } from "@/data/shop";
+ import { toast } from "sonner";
+ 
+ export const Route = createFileRoute("/shop/$productId")({
+   head: ({ params }) => {
+     const product = shopProducts.find((p) => p.id === params.productId);
+-    const title = product
+-      ? `${product.name} | PakBuilt Shop`
+-      : "Product Not Found | PakBuilt";
++    const title = product ? `${product.name} | PakBuilt Shop` : "Product | PakBuilt Shop";
+     return {
+       meta: [
+         { title },
+@@ -27,16 +27,25 @@ export const Route = createFileRoute("/shop/$productId")({
+ 
+ function ProductDetailPage() {
+   const { productId } = Route.useParams();
+-  const product = shopProducts.find((p) => p.id === productId);
++  const catalog = useShopifyCatalog();
++  const product = catalog.products.find((p) => p.id === productId);
++  const match = product ? catalog.match(product) : null;
++
++  if (!product && catalog.isLoading) {
++    return (
++      <>
++        <PageHero eyebrow="Shop" title="Loading…" />
++        <section className="mx-auto max-w-7xl px-4 py-20 text-center sm:px-6 lg:px-8" />
++      </>
++    );
++  }
+ 
+   if (!product) {
+     return (
+       <>
+         <PageHero eyebrow="Shop" title="Product Not Found" />
+         <section className="mx-auto max-w-7xl px-4 py-20 text-center sm:px-6 lg:px-8">
+-          <p className="text-muted-foreground">
+-            This product doesn't exist or has been removed.
+-          </p>
++          <p className="text-muted-foreground">This product doesn't exist or has been removed.</p>
+           <Button asChild variant="cta" size="lg" className="mt-6">
+             <Link to="/shop">Back to Shop</Link>
+           </Button>
+@@ -46,17 +55,13 @@ function ProductDetailPage() {
+   }
+ 
+   const category = shopCategories.find((c) => c.slug === product.category);
+-  const related = shopProducts
+-    .filter((p) => p.category === product.category && p.id !== product.id)
++  const related = catalog.products
++    .filter((p) => p.category && p.category === product.category && p.id !== product.id)
+     .slice(0, 4);
+ 
+   return (
+     <>
+-      <PageHero
+-        eyebrow="Shop"
+-        title={product.name}
+-        subtitle={product.spec}
+-      />
++      <PageHero eyebrow="Shop" title={product.name} subtitle={product.spec} />
+ 
+       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+         {/* Back link */}
+@@ -92,24 +97,22 @@ function ProductDetailPage() {
+               <span className="font-display text-[0.65rem] font-bold tracking-[0.16em] text-primary uppercase">
+                 {product.brand}
+               </span>
+-              <h1 className="font-display mt-2 text-3xl font-bold sm:text-4xl">
+-                {product.name}
+-              </h1>
+-              <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+-                {product.spec}
+-              </p>
++              <h1 className="font-display mt-2 text-3xl font-bold sm:text-4xl">{product.name}</h1>
++              <p className="mt-3 text-base leading-relaxed text-muted-foreground">{product.spec}</p>
+ 
+               {/* Price */}
+               <div className="mt-6 flex items-baseline gap-3">
+                 <span className="font-display text-3xl font-bold text-foreground">
+-                  {formatPrice(product.price)}
++                  {match ? formatMoney(match.variant.price) : formatPrice(product.price)}
+                 </span>
+                 {product.originalPrice && (
+                   <span className="text-lg text-muted-foreground line-through">
+                     {formatPrice(product.originalPrice)}
+                   </span>
+                 )}
+-                <span className="text-sm text-muted-foreground">per {product.unit}</span>
++                {product.unit && (
++                  <span className="text-sm text-muted-foreground">per {product.unit}</span>
++                )}
+               </div>
+               {product.originalPrice && (
+                 <span className="mt-1 inline-block text-xs font-bold text-primary">
+@@ -128,7 +131,7 @@ function ProductDetailPage() {
+               </ul>
+ 
+               {/* Add to cart */}
+-              <AddToCartSection product={product} />
++              <AddToCartSection product={product} match={match} loading={catalog.isLoading} />
+ 
+               {/* Delivery note */}
+               <div className="mt-6 flex items-start gap-3 rounded-lg border border-border bg-sand p-4">
+@@ -136,7 +139,8 @@ function ProductDetailPage() {
+                 <div>
+                   <p className="text-sm font-semibold">Delivery Coordinated</p>
+                   <p className="mt-0.5 text-xs text-muted-foreground">
+-                    Location, access and timing confirmed before dispatch. Bulk orders may qualify for free delivery.
++                    Location, access and timing confirmed before dispatch. Bulk orders may qualify
++                    for free delivery.
+                   </p>
+                 </div>
+               </div>
+@@ -171,7 +175,9 @@ function ProductDetailPage() {
+                       <h3 className="font-display mt-1 text-sm font-bold leading-snug group-hover:text-primary">
+                         {p.name}
+                       </h3>
+-                      <p className="mt-2 font-display text-base font-bold">{formatPrice(p.price)}</p>
++                      <p className="mt-2 font-display text-base font-bold">
++                        {formatPrice(p.price)}
++                      </p>
+                     </div>
+                   </Link>
+                 </Reveal>
+@@ -184,17 +190,42 @@ function ProductDetailPage() {
+   );
+ }
+ 
+-function AddToCartSection({ product }: { product: (typeof shopProducts)[number] }) {
++function AddToCartSection({
++  product,
++  match,
++  loading,
++}: {
++  product: (typeof shopProducts)[number];
++  match: ShopifyMatch | null;
++  loading: boolean;
++}) {
+   const [qty, setQty] = useState(1);
++  const addItem = useCartStore((s) => s.addItem);
++  const cartLoading = useCartStore((s) => s.isLoading);
+ 
+-  function handleAdd() {
+-    addToCart(
+-      { id: product.id, name: product.name, price: product.price, unit: product.unit, image: product.image },
+-      qty,
+-    );
++  async function handleAdd() {
++    if (!match) return;
++    await addItem(toCartItem(product, match, qty));
+     toast.success(`${qty}× ${product.name} added to cart`);
+   }
+ 
++  if (!match && !loading) {
++    return (
++      <div className="mt-8">
++        <Button asChild variant="cta" size="lg">
++          <Link to="/contact">Request a Quote</Link>
++        </Button>
++        <p className="mt-2 text-xs text-muted-foreground">
++          This item isn't available to order online yet. Send us your requirement and we'll quote
++          you.
++        </p>
++      </div>
++    );
++  }
++
++  const unit = match ? Number.parseFloat(match.variant.price.amount) : 0;
++  const soldOut = match ? !match.variant.availableForSale : false;
++
+   return (
+     <div className="mt-8 flex flex-wrap items-center gap-3">
+       <div className="flex items-center rounded-md border border-border bg-card">
+@@ -216,9 +247,19 @@ function AddToCartSection({ product }: { product: (typeof shopProducts)[number]
+           <Plus className="size-4" />
+         </button>
+       </div>
+-      <Button variant="cta" size="lg" onClick={handleAdd} className="flex-1 sm:flex-none">
++      <Button
++        variant="cta"
++        size="lg"
++        onClick={handleAdd}
++        disabled={!match || soldOut || cartLoading}
++        className="flex-1 sm:flex-none"
++      >
+         <ShoppingCart className="size-4" />
+-        Add to Cart — {formatPrice(product.price * qty)}
++        {soldOut
++          ? "Out of stock"
++          : match
++            ? `Add to Cart — ${formatMoney({ amount: String(unit * qty), currencyCode: match.variant.price.currencyCode })}`
++            : "Loading…"}
+       </Button>
+     </div>
+   );
+diff --git a/src/routes/shop.index.tsx b/src/routes/shop.index.tsx
+index 75cf92f..caa8b2c 100644
+--- a/src/routes/shop.index.tsx
++++ b/src/routes/shop.index.tsx
+@@ -7,8 +7,10 @@ import { Reveal } from "@/components/site/Reveal";
+ import { SectionHeading } from "@/components/site/SectionHeading";
+ import { Button } from "@/components/ui/button";
+ import { Input } from "@/components/ui/input";
+-import { addToCart } from "@/lib/cart-store";
+-import { shopCategories, shopProducts, formatPrice, type ShopProduct } from "@/data/shop";
++import { useCartStore } from "@/stores/cartStore";
++import { formatMoney } from "@/lib/shopify";
++import { toCartItem, useShopifyCatalog } from "@/hooks/useShopifyCatalog";
++import { shopCategories, formatPrice, type ShopProduct } from "@/data/shop";
+ import { cn } from "@/lib/utils";
+ import { toast } from "sonner";
+ 
+@@ -42,12 +44,15 @@ function ShopPage() {
+   const navigate = Route.useNavigate();
+   const [query, setQuery] = useState(q ?? "");
+   const [showFilters, setShowFilters] = useState(false);
++  const addItem = useCartStore((s) => s.addItem);
++  const cartLoading = useCartStore((s) => s.isLoading);
++  const catalog = useShopifyCatalog();
+ 
+   const active = shopCategories.find((c) => c.slug === category)?.slug;
+ 
+   const filtered = useMemo(() => {
+     const search = query.trim().toLowerCase();
+-    return shopProducts.filter((p) => {
++    return catalog.products.filter((p) => {
+       if (active && p.category !== active) return false;
+       if (!search) return true;
+       return (
+@@ -57,13 +62,18 @@ function ShopPage() {
+         p.spec.toLowerCase().includes(search)
+       );
+     });
+-  }, [active, query]);
++  }, [active, query, catalog.products]);
+ 
+   const setCategory = (slug?: string) =>
+     navigate({ search: (prev) => ({ ...prev, category: slug }), resetScroll: false });
+ 
+-  function handleAdd(p: ShopProduct) {
+-    addToCart({ id: p.id, name: p.name, price: p.price, unit: p.unit, image: p.image });
++  async function handleAdd(p: ShopProduct) {
++    const m = catalog.match(p);
++    if (!m) {
++      toast.error("This item isn't available to order online yet. Please request a quote.");
++      return;
++    }
++    await addItem(toCartItem(p, m, 1));
+     toast.success(`${p.name} added to cart`);
+   }
+ 
+@@ -108,10 +118,7 @@ function ShopPage() {
+ 
+           {/* Category chips */}
+           <div
+-            className={cn(
+-              "flex-wrap gap-2",
+-              showFilters ? "flex" : "hidden lg:flex",
+-            )}
++            className={cn("flex-wrap gap-2", showFilters ? "flex" : "hidden lg:flex")}
+             role="group"
+             aria-label="Filter by category"
+           >
+@@ -119,7 +126,11 @@ function ShopPage() {
+               All
+             </FilterChip>
+             {shopCategories.map((c) => (
+-              <FilterChip key={c.slug} active={active === c.slug} onClick={() => setCategory(c.slug)}>
++              <FilterChip
++                key={c.slug}
++                active={active === c.slug}
++                onClick={() => setCategory(c.slug)}
++              >
+                 {c.name}
+               </FilterChip>
+             ))}
+@@ -153,72 +164,88 @@ function ShopPage() {
+           key={`${active ?? "all"}-${query}`}
+           className="mt-4 grid animate-fade-in gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+         >
+-          {filtered.map((p, i) => (
+-            <Reveal key={p.id} delay={i * 30}>
+-              <div className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:border-primary/40 hover:shadow-lift">
+-                {p.badge && (
+-                  <span className="absolute top-3 left-3 z-10 rounded-md bg-primary px-2 py-0.5 text-[0.65rem] font-bold text-primary-foreground uppercase">
+-                    {p.badge}
+-                  </span>
+-                )}
++          {filtered.map((p, i) => {
++            const m = catalog.match(p);
++            return (
++              <Reveal key={p.id} delay={i * 30}>
++                <div className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:border-primary/40 hover:shadow-lift">
++                  {p.badge && (
++                    <span className="absolute top-3 left-3 z-10 rounded-md bg-primary px-2 py-0.5 text-[0.65rem] font-bold text-primary-foreground uppercase">
++                      {p.badge}
++                    </span>
++                  )}
+ 
+-                <Link to="/shop/$productId" params={{ productId: p.id }} className="block">
+-                  <div className="aspect-[4/3] overflow-hidden bg-sand">
+-                    <img
+-                      src={p.image}
+-                      alt={p.name}
+-                      loading="lazy"
+-                      className="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+-                    />
+-                  </div>
+-                </Link>
+-
+-                <div className="flex flex-1 flex-col p-4">
+-                  <span className="font-display text-[0.6rem] font-bold tracking-[0.16em] text-primary uppercase">
+-                    {p.brand}
+-                  </span>
+-                  <Link to="/shop/$productId" params={{ productId: p.id }}>
+-                    <h2 className="font-display mt-1 text-sm font-bold leading-snug transition-colors duration-200 group-hover:text-primary">
+-                      {p.name}
+-                    </h2>
++                  <Link to="/shop/$productId" params={{ productId: p.id }} className="block">
++                    <div className="aspect-[4/3] overflow-hidden bg-sand">
++                      <img
++                        src={p.image}
++                        alt={p.name}
++                        loading="lazy"
++                        className="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
++                      />
++                    </div>
+                   </Link>
+-                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground line-clamp-2">
+-                    {p.spec}
+-                  </p>
+ 
+-                  <div className="mt-auto pt-3">
+-                    <div className="flex items-baseline gap-2">
+-                      <span className="font-display text-lg font-bold text-foreground">
+-                        {formatPrice(p.price)}
+-                      </span>
+-                      {p.originalPrice && (
+-                        <span className="text-xs text-muted-foreground line-through">
+-                          {formatPrice(p.originalPrice)}
++                  <div className="flex flex-1 flex-col p-4">
++                    <span className="font-display text-[0.6rem] font-bold tracking-[0.16em] text-primary uppercase">
++                      {p.brand}
++                    </span>
++                    <Link to="/shop/$productId" params={{ productId: p.id }}>
++                      <h2 className="font-display mt-1 text-sm font-bold leading-snug transition-colors duration-200 group-hover:text-primary">
++                        {p.name}
++                      </h2>
++                    </Link>
++                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground line-clamp-2">
++                      {p.spec}
++                    </p>
++
++                    <div className="mt-auto pt-3">
++                      <div className="flex items-baseline gap-2">
++                        <span className="font-display text-lg font-bold text-foreground">
++                          {m ? formatMoney(m.variant.price) : formatPrice(p.price)}
+                         </span>
+-                      )}
+-                      <span className="text-[0.65rem] text-muted-foreground">/{p.unit}</span>
+-                    </div>
+-                    <div className="mt-3 flex gap-2">
+-                      <Button
+-                        variant="cta"
+-                        size="sm"
+-                        className="flex-1"
+-                        onClick={() => handleAdd(p)}
+-                      >
+-                        <ShoppingCart className="size-3.5" />
+-                        Add to Cart
+-                      </Button>
+-                      <Button asChild variant="onLight" size="sm">
+-                        <Link to="/shop/$productId" params={{ productId: p.id }}>
+-                          Details
+-                        </Link>
+-                      </Button>
++                        {p.originalPrice && (
++                          <span className="text-xs text-muted-foreground line-through">
++                            {formatPrice(p.originalPrice)}
++                          </span>
++                        )}
++                        {p.unit && (
++                          <span className="text-[0.65rem] text-muted-foreground">/{p.unit}</span>
++                        )}
++                      </div>
++                      <div className="mt-3 flex gap-2">
++                        {m || catalog.isLoading ? (
++                          <Button
++                            variant="cta"
++                            size="sm"
++                            className="flex-1"
++                            disabled={!m || cartLoading || !m.variant.availableForSale}
++                            onClick={() => handleAdd(p)}
++                          >
++                            <ShoppingCart className="size-3.5" />
++                            {catalog.isLoading
++                              ? "Loading…"
++                              : m && !m.variant.availableForSale
++                                ? "Out of stock"
++                                : "Add to Cart"}
++                          </Button>
++                        ) : (
++                          <Button asChild variant="cta" size="sm" className="flex-1">
++                            <Link to="/contact">Request Quote</Link>
++                          </Button>
++                        )}
++                        <Button asChild variant="onLight" size="sm">
++                          <Link to="/shop/$productId" params={{ productId: p.id }}>
++                            Details
++                          </Link>
++                        </Button>
++                      </div>
+                     </div>
+                   </div>
+                 </div>
+-              </div>
+-            </Reveal>
+-          ))}
++              </Reveal>
++            );
++          })}
+         </div>
+ 
+         {filtered.length === 0 && (
