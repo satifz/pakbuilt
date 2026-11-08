@@ -422,7 +422,9 @@ export async function queryCartTotalQuantity(cartId: string): Promise<number | u
   const data = await storefrontApiRequest<{
     data: { cart: { id: string; totalQuantity: number } | null };
   }>(CART_QUERY, { id: cartId });
-  return data?.data?.cart?.totalQuantity;
+  if (!data) return undefined; // request failed: keep local cart
+  // Shopify returns cart: null once an order is placed, so treat that as empty.
+  return data.data?.cart?.totalQuantity ?? 0;
 }
 
 // ---------- Catalog reads ----------
