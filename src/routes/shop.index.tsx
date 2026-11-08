@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { useCartStore } from "@/stores/cartStore";
 import { formatMoney } from "@/lib/shopify";
 import { toCartItem, useShopifyCatalog } from "@/hooks/useShopifyCatalog";
-import { shopCategories, shopProducts, formatPrice, type ShopProduct } from "@/data/shop";
+import { shopCategories, formatPrice, type ShopProduct } from "@/data/shop";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -52,7 +52,7 @@ function ShopPage() {
 
   const filtered = useMemo(() => {
     const search = query.trim().toLowerCase();
-    return shopProducts.filter((p) => {
+    return catalog.products.filter((p) => {
       if (active && p.category !== active) return false;
       if (!search) return true;
       return (
@@ -62,7 +62,7 @@ function ShopPage() {
         p.spec.toLowerCase().includes(search)
       );
     });
-  }, [active, query]);
+  }, [active, query, catalog.products]);
 
   const setCategory = (slug?: string) =>
     navigate({ search: (prev) => ({ ...prev, category: slug }), resetScroll: false });
@@ -209,7 +209,9 @@ function ShopPage() {
                             {formatPrice(p.originalPrice)}
                           </span>
                         )}
-                        <span className="text-[0.65rem] text-muted-foreground">/{p.unit}</span>
+                        {p.unit && (
+                          <span className="text-[0.65rem] text-muted-foreground">/{p.unit}</span>
+                        )}
                       </div>
                       <div className="mt-3 flex gap-2">
                         {m || catalog.isLoading ? (

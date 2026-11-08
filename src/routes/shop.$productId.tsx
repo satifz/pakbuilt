@@ -13,7 +13,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/shop/$productId")({
   head: ({ params }) => {
     const product = shopProducts.find((p) => p.id === params.productId);
-    const title = product ? `${product.name} | PakBuilt Shop` : "Product Not Found | PakBuilt";
+    const title = product ? `${product.name} | PakBuilt Shop` : "Product | PakBuilt Shop";
     return {
       meta: [
         { title },
@@ -27,9 +27,18 @@ export const Route = createFileRoute("/shop/$productId")({
 
 function ProductDetailPage() {
   const { productId } = Route.useParams();
-  const product = shopProducts.find((p) => p.id === productId);
   const catalog = useShopifyCatalog();
+  const product = catalog.products.find((p) => p.id === productId);
   const match = product ? catalog.match(product) : null;
+
+  if (!product && catalog.isLoading) {
+    return (
+      <>
+        <PageHero eyebrow="Shop" title="Loading…" />
+        <section className="mx-auto max-w-7xl px-4 py-20 text-center sm:px-6 lg:px-8" />
+      </>
+    );
+  }
 
   if (!product) {
     return (
@@ -46,8 +55,8 @@ function ProductDetailPage() {
   }
 
   const category = shopCategories.find((c) => c.slug === product.category);
-  const related = shopProducts
-    .filter((p) => p.category === product.category && p.id !== product.id)
+  const related = catalog.products
+    .filter((p) => p.category && p.category === product.category && p.id !== product.id)
     .slice(0, 4);
 
   return (
@@ -101,7 +110,9 @@ function ProductDetailPage() {
                     {formatPrice(product.originalPrice)}
                   </span>
                 )}
-                <span className="text-sm text-muted-foreground">per {product.unit}</span>
+                {product.unit && (
+                  <span className="text-sm text-muted-foreground">per {product.unit}</span>
+                )}
               </div>
               {product.originalPrice && (
                 <span className="mt-1 inline-block text-xs font-bold text-primary">
