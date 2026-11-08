@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import founderBackground from "@/assets/founder-placeholder.jpg";
-import founderPhoto from "@/assets/founder-atif.png";
+import founderPhoto from "@/assets/founder-atif.webp";
 import { Reveal } from "@/components/site/Reveal";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { company } from "@/data/company";
