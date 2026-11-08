@@ -48,9 +48,12 @@ export function Footer() {
                       key={label}
                       title={`${label} — coming soon`}
                       aria-label={`${label} profile coming soon`}
-                      className="grid size-9 place-items-center rounded-md border border-charcoal-foreground/15 text-charcoal-foreground/50 transition-colors hover:border-primary hover:text-primary"
+                      className="relative grid size-9 cursor-not-allowed place-items-center rounded-md border border-dashed border-charcoal-foreground/25 text-charcoal-foreground/30"
                     >
                       <Icon className="size-4" />
+                      <span className="absolute -top-2 -right-2 rounded-full bg-primary px-1.5 py-0.5 text-[0.5rem] leading-none font-bold tracking-wider text-primary-foreground uppercase">
+                        Soon
+                      </span>
                     </span>
                   ),
                 )}
