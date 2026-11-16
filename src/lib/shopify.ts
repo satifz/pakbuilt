@@ -461,3 +461,56 @@ export async function fetchShopifyProductByHandle(
 
   return data?.data?.product ?? null;
 }
+
+export interface ShopifyCollection {
+  id: string;
+  handle: string;
+  title: string;
+  productHandles: string[];
+}
+
+const COLLECTIONS_QUERY = `
+  query Collections($first: Int!) {
+    collections(first: $first, sortKey: TITLE) {
+      edges {
+        node {
+          id
+          handle
+          title
+          products(first: 250) {
+            edges {
+              node {
+                handle
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+/** Loads the collections that are published to the Headless channel, with their product handles. */
+export async function fetchShopifyCollections(first = 50): Promise<ShopifyCollection[]> {
+  const data = await storefrontApiRequest<{
+    data: {
+      collections: {
+        edges: Array<{
+          node: {
+            id: string;
+            handle: string;
+            title: string;
+            products: { edges: Array<{ node: { handle: string } }> };
+          };
+        }>;
+      } | null;
+    };
+  }>(COLLECTIONS_QUERY, { first });
+
+  return (data?.data?.collections?.edges ?? []).map(({ node }) => ({
+    id: node.id,
+    handle: node.handle,
+    title: node.title,
+    productHandles: node.products.edges.map((e) => e.node.handle),
+  }));
+}

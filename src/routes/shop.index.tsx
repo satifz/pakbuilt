@@ -48,12 +48,23 @@ function ShopPage() {
   const cartLoading = useCartStore((s) => s.isLoading);
   const catalog = useShopifyCatalog();
 
-  const active = shopCategories.find((c) => c.slug === category)?.slug;
+  // Category buttons come from your Shopify collections. If Shopify has none
+  // published to the Headless channel yet, fall back to the built-in categories.
+  const useCollections = catalog.collections.length > 0;
+  const chips = useCollections
+    ? catalog.collections.map((c) => ({ slug: c.handle, name: c.title }))
+    : catalog.collectionsLoading
+      ? []
+      : shopCategories.map((c) => ({ slug: c.slug, name: c.name }));
+  const active = chips.find((c) => c.slug === category)?.slug;
 
   const filtered = useMemo(() => {
     const search = query.trim().toLowerCase();
     return catalog.products.filter((p) => {
-      if (active && p.category !== active) return false;
+      if (active) {
+        const inside = useCollections ? catalog.inCollection(p.id, active) : p.category === active;
+        if (!inside) return false;
+      }
       if (!search) return true;
       return (
         p.name.toLowerCase().includes(search) ||
@@ -62,7 +73,7 @@ function ShopPage() {
         p.spec.toLowerCase().includes(search)
       );
     });
-  }, [active, query, catalog.products]);
+  }, [active, query, catalog, useCollections]);
 
   const setCategory = (slug?: string) =>
     navigate({ search: (prev) => ({ ...prev, category: slug }), resetScroll: false });
@@ -125,7 +136,7 @@ function ShopPage() {
             <FilterChip active={!active} onClick={() => setCategory()}>
               All
             </FilterChip>
-            {shopCategories.map((c) => (
+            {chips.map((c) => (
               <FilterChip
                 key={c.slug}
                 active={active === c.slug}

@@ -1,10 +1,16 @@
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchShopifyProducts, type ShopifyProduct, type ShopifyVariant } from "@/lib/shopify";
+import {
+  fetchShopifyCollections,
+  fetchShopifyProducts,
+  type ShopifyProduct,
+  type ShopifyVariant,
+} from "@/lib/shopify";
 import { shopCategories, shopProducts, type ShopProduct } from "@/data/shop";
 import type { CartItem } from "@/stores/cartStore";
 
 export interface ShopifyMatch {
+  handle: string;
   variant: ShopifyVariant;
   title: string;
   image?: string | undefined;
@@ -26,7 +32,7 @@ function pickVariant(p: ShopifyNode): ShopifyVariant | null {
 function toMatch(n: ShopifyNode): ShopifyMatch | null {
   const variant = pickVariant(n);
   if (!variant) return null;
-  return { variant, title: n.title, image: n.images.edges[0]?.node.url };
+  return { handle: n.handle, variant, title: n.title, image: n.images.edges[0]?.node.url };
 }
 
 /** Finds the category slug for a Shopify product from its product type or tags. */
@@ -77,6 +83,28 @@ export function useShopifyCatalog() {
     staleTime: 60_000,
   });
 
+  const collectionsQuery = useQuery({
+    queryKey: ["shopify-collections"],
+    queryFn: () => fetchShopifyCollections(50),
+    staleTime: 60_000,
+  });
+
+  // Shopify collections become the category buttons. Skip Shopify's built-in
+  // "Home page" collection and any collection that has no products.
+  const collections = useMemo(
+    () =>
+      (collectionsQuery.data ?? [])
+        .filter(
+          (c) => c.handle !== "frontpage" && c.handle !== "all" && c.productHandles.length > 0,
+        )
+        .map((c) => ({
+          handle: c.handle,
+          title: c.title,
+          productHandles: new Set(c.productHandles),
+        })),
+    [collectionsQuery.data],
+  );
+
   const nodes = useMemo(() => (query.data ?? []).map((p) => p.node), [query.data]);
 
   const entries = useMemo<ShopEntry[]>(() => {
@@ -124,6 +152,16 @@ export function useShopifyCatalog() {
 
   return {
     products,
+    collections: collections.map((c) => ({ handle: c.handle, title: c.title })),
+    collectionsLoading: collectionsQuery.isLoading,
+    /** True when the product is inside the given Shopify collection. */
+    inCollection: (productId: string, collectionHandle: string): boolean => {
+      const handle = matchMap.get(productId)?.handle;
+      if (!handle) return false;
+      return (
+        collections.find((c) => c.handle === collectionHandle)?.productHandles.has(handle) ?? false
+      );
+    },
     match: (local: ShopProduct): ShopifyMatch | null => matchMap.get(local.id) ?? null,
     isLoading: query.isLoading,
     isError: query.isError,
